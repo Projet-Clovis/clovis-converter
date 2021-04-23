@@ -149,6 +149,12 @@ def creationStyle():
     text_style.font.name = 'Montserrat Light'
     text_style.font.size = Pt(12)
 
+    # ----- style mini-title (colorful-block) -----
+    mini_title_style = styles.add_style('mini-title', WD_STYLE_TYPE.CHARACTER)
+    mini_title_style.base_style = styles['Normal']
+    mini_title_style.font.name = 'Montserrat Light'
+    mini_title_style.font.size = Pt(10)
+
 
 
 ## Liste des blocs
@@ -174,6 +180,17 @@ def add_h3(text):
 def add_text(text):
     """ Ajoute du texte. """
     document.add_paragraph(text, style='clovis-text')
+
+
+def add_colorful_block(title, text, color='#4f4f4f'):
+    """ Ajoute un bloc coloré. """
+    p = document.add_paragraph('', style='clovis-text')
+    insertBorder(p, color=color)
+
+    title = p.add_run(title.upper() + '\n\n', style='mini-title')
+    title.font.color.rgb = hex_color(color)
+
+    p.add_run(text)
 
 
 ## Création du fichier
@@ -217,5 +234,7 @@ p.add_run('Élaboré par Freud et Breuer à la fin du XIXè siècle, l\'hypothè
 '- le surmoi, enfin, est la morale, ce que la bonne éducation a inculqué à l\'enfant.')
 
 #p.alignment = 3 # justified
+
+add_colorful_block('test', 'hello world\nT\'es un ouf en fait j\'allais pas parler de soleil\nJe bosse chez Noz')
 
 document.save('demo2.docx')
