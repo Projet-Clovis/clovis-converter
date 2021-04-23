@@ -55,28 +55,28 @@ def insertBorder(paragraph, color='#dadce0'):
     bottom = OxmlElement('w:bottom')
     bottom.set(qn('w:val'), 'single')
     bottom.set(qn('w:sz'), '6')
-    bottom.set(qn('w:space'), '1')
+    bottom.set(qn('w:space'), '8')
     bottom.set(qn('w:color'), color) # on peut modifier la couleur ici
     pBdr.append(bottom)
 
     top = OxmlElement('w:top')
     top.set(qn('w:val'), 'single')
     top.set(qn('w:sz'), '6')
-    top.set(qn('w:space'), '1')
+    top.set(qn('w:space'), '8')
     top.set(qn('w:color'), color) # on peut modifier la couleur ici
     pBdr.append(top)
 
     left = OxmlElement('w:left')
     left.set(qn('w:val'), 'single')
     left.set(qn('w:sz'), '6')
-    left.set(qn('w:space'), '1')
+    left.set(qn('w:space'), '8')
     left.set(qn('w:color'), color) # on peut modifier la couleur ici
     pBdr.append(left)
 
     right = OxmlElement('w:right')
     right.set(qn('w:val'), 'single')
     right.set(qn('w:sz'), '6')
-    right.set(qn('w:space'), '1')
+    right.set(qn('w:space'), '8')
     right.set(qn('w:color'), color) # on peut modifier la couleur ici
     pBdr.append(right)
 
@@ -141,6 +141,12 @@ def creationStyle():
     after_title_style.font.name = 'Montserrat Light'
     after_title_style.font.size = Pt(1)
 
+    # ----- style after-mini-title -----
+    # espace après les mini-title pour la mise en page
+    after_title_style = styles.add_style('after-mini-title', WD_STYLE_TYPE.CHARACTER)
+    after_title_style.font.name = 'Montserrat Light'
+    after_title_style.font.size = Pt(5)
+
     # ----- style text (clovis-text) -----
     text_color = '#333333'
     text_style = styles.add_style('clovis-text', WD_STYLE_TYPE.PARAGRAPH)
@@ -152,7 +158,7 @@ def creationStyle():
     # ----- style mini-title (colorful-block) -----
     mini_title_style = styles.add_style('mini-title', WD_STYLE_TYPE.CHARACTER)
     mini_title_style.base_style = styles['Normal']
-    mini_title_style.font.name = 'Montserrat Light'
+    mini_title_style.font.name = 'Montserrat Medium'
     mini_title_style.font.size = Pt(10)
 
 
@@ -187,7 +193,8 @@ def add_colorful_block(title, text, color='#4f4f4f'):
     p = document.add_paragraph('', style='clovis-text')
     insertBorder(p, color=color)
 
-    title = p.add_run(title.upper() + '\n\n', style='mini-title')
+    title = p.add_run(title.upper() + '\n', style='mini-title')
+    p.add_run('\n', style='after-mini-title')
     title.font.color.rgb = hex_color(color)
 
     p.add_run(text)
