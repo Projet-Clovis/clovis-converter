@@ -16,6 +16,7 @@ htmlStyle = {
     'sup': 0,
     'sub': 0,
     'f-code': 0,
+    'hl-yellow': 0,
 }
 
 class MyHTMLParser(HTMLParser):
@@ -55,6 +56,7 @@ class MyHTMLParser(HTMLParser):
             htmlStyle['sub'] = 0
         elif tag == 'span':
             htmlStyle['f-code'] = 0
+            htmlStyle['hl-yellow'] = 0
             #todo : mettre une pile pour savoir la classe correspondante ?
 
     def handle_data(self, data):
@@ -76,6 +78,9 @@ class MyHTMLParser(HTMLParser):
 
         if htmlStyle['sub']:
             run.font.subscript = True
+
+        if htmlStyle['hl-yellow']:
+            run.font.highlight_color = WD_COLOR_INDEX.YELLOW
 
         if htmlStyle['f-code']:
             run.font.name = 'Courier New'
