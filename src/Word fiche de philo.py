@@ -193,9 +193,9 @@ def add_colorful_block(title, text, color='#4f4f4f'):
     p = document.add_paragraph('', style='clovis-text')
     insertBorder(p, color=color)
 
-    title = p.add_run(title.upper() + '\n', style='mini-title')
+    mini_title = p.add_run(title.upper() + '\n', style='mini-title')
     p.add_run('\n', style='after-mini-title')
-    title.font.color.rgb = hex_color(color)
+    mini_title.font.color.rgb = hex_color(color)
 
     p.add_run(text)
 
@@ -227,20 +227,15 @@ add_text('- le ça désigne les pulsions fortement liées au corps et à l\'inst
 add_text('- le surmoi, enfin, est la morale, ce que la bonne éducation a inculqué à l\'enfant.')
 
 
-p = document.add_paragraph('', style='clovis-text')
-insertBorder(p, color='#ec9787')
 
-g = p.add_run('RÉSUMÉ\n\n')
-g.font.size = Pt(10)
-g.font.color.rgb = hex_color('#ec9787')
+#p.alignment = 3 # justified
 
-p.add_run('Élaboré par Freud et Breuer à la fin du XIXè siècle, l\'hypothèse de l\'inconscient confirme que le sujet n\'est pas constitué que de la pensée consciente. Plusieurs forces agissent et influencent nos pensées et notre comportement.\n'
+add_colorful_block('résumé', 'Élaboré par Freud et Breuer à la fin du XIXè siècle, l\'hypothèse de l\'inconscient confirme que le sujet n\'est pas constitué que de la pensée consciente. Plusieurs forces agissent et influencent nos pensées et notre comportement.\n'
 'Freud affirme que le moi est multiple et soumis à des troubles de la personnalité : "Le moi n\'est pas maître dans sa propre maison". Il associe au "moi" un "ça" et un "surmoi" :\n'
 '- le moi est l\'individu conscient, capable de se plier aux conventions sociales;\n'
 '- le ça désigne les pulsions fortement liées au corps et à l\'instinct animal d\'un individu. Le plaisir domine le ça, qui est freiné par le moi;\n'
-'- le surmoi, enfin, est la morale, ce que la bonne éducation a inculqué à l\'enfant.')
-
-#p.alignment = 3 # justified
+'- le surmoi, enfin, est la morale, ce que la bonne éducation a inculqué à l\'enfant.',
+'#ec9787')
 
 add_colorful_block('test', 'hello world\nT\'es un ouf en fait j\'allais pas parler de soleil\nJe bosse chez Noz')
 
