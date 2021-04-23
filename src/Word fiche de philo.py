@@ -33,8 +33,13 @@ def insertHR(paragraph):
     pBdr.append(bottom)
 
 
-def insertBox(paragraph, color='#dadce0'):
-    """ Test : texte dans une boîte. """
+def insertBorder(paragraph, color='#dadce0'):
+    """ Add a border around the paragraph.
+
+        * args
+        - paragraph: the paragraph around which the border is set
+        - color: the border color
+        """
     p = paragraph._p  # p is the <w:p> XML element
     pPr = p.get_or_add_pPr()
     pBdr = OxmlElement('w:pBdr')
@@ -199,7 +204,7 @@ add_text('- le surmoi, enfin, est la morale, ce que la bonne éducation a inculq
 
 
 p = document.add_paragraph('', style='clovis-text')
-insertBox(p, color='#ec9787')
+insertBorder(p, color='#ec9787')
 
 g = p.add_run('RÉSUMÉ\n\n')
 g.font.size = Pt(10)
