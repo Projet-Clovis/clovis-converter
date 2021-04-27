@@ -203,13 +203,10 @@ def add_colorful_block(title, text, color='#4f4f4f', background_color='None'):
         if background_color[0] == '#':
             background_color = background_color[1:]
 
-        tag = p._p
-
         shd = OxmlElement('w:shd')
-
-        #shd.set(qn('w:color'), 'auto')
         shd.set(qn('w:fill'), background_color)
 
+        tag = p._p
         tag.pPr.append(shd)
 
 
