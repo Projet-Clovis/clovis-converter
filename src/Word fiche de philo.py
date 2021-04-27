@@ -188,7 +188,7 @@ def add_text(text):
     document.add_paragraph(text, style='clovis-text')
 
 
-def add_colorful_block(title, text, color='#4f4f4f'):
+def add_colorful_block(title, text, color='#4f4f4f', background_color='None'):
     """ Ajoute un bloc coloré. """
     p = document.add_paragraph('', style='clovis-text')
     insertBorder(p, color=color)
@@ -198,6 +198,19 @@ def add_colorful_block(title, text, color='#4f4f4f'):
     mini_title.font.color.rgb = hex_color(color)
 
     p.add_run(text)
+
+    if background_color:
+        if background_color[0] == '#':
+            background_color = background_color[1:]
+
+        tag = p._p
+
+        shd = OxmlElement('w:shd')
+
+        #shd.set(qn('w:color'), 'auto')
+        shd.set(qn('w:fill'), background_color)
+
+        tag.pPr.append(shd)
 
 
 ## Création du fichier
@@ -235,7 +248,7 @@ add_colorful_block('résumé', 'Élaboré par Freud et Breuer à la fin du XIXè
 '- le moi est l\'individu conscient, capable de se plier aux conventions sociales;\n'
 '- le ça désigne les pulsions fortement liées au corps et à l\'instinct animal d\'un individu. Le plaisir domine le ça, qui est freiné par le moi;\n'
 '- le surmoi, enfin, est la morale, ce que la bonne éducation a inculqué à l\'enfant.',
-'#ec9787')
+'#ec9787', '#fceeec')
 
 add_colorful_block('test', 'hello world\nT\'es un ouf en fait j\'allais pas parler de soleil\nJe bosse chez Noz')
 
