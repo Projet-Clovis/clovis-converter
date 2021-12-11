@@ -13,6 +13,8 @@
 \usepackage{tikzpagenodes}
 \usetikzlibrary{calc}
 
+\usepackage{fontawesome5}
+
 
 % -------------------- Title --------------------
 \title{Algorithmes d'Optimisation des Graphes}%
@@ -28,10 +30,8 @@
 
 % -------------------- Styles --------------------
 \mdfdefinestyle{mystyle}{%
-  leftmargin=2ex,
-  innertopmargin=2\baselineskip,
-  skipabove={\dimexpr0.5\baselineskip+\topskip\relax},
-  skipbelow={\dimexpr0.5\baselineskip+\topskip\relax},
+  innertopmargin=10px,
+  innerbottommargin=10px,
   firstextra={%
     \path let \p1=(P), \p2=(O) 
     in node[font=\bfseries] at ([yshift=-2ex]0.5*\x1-\x2,\y1) {Solution};
@@ -72,6 +72,12 @@ Descartes donne un définition universelle du sujet, valable pour tous les humai
 { \footnotesize \textcolor{danger}{ATTENTION}}
 \\ Par le désir, l'Homme fait l'expérience du manque et de la souffrance. Souvent cependant, les hommes sont faibles lorsqu'il s'agit de réprimer ou de contrôler leurs désirs.
 \end{tcolorbox}
+
+\begin{solution}
+{ \footnotesize \textcolor{danger}{ATTENTION}}
+\vspace{3px}
+\\ Par le désir, l'Homme fait l'expérience du manque et de la souffrance. Souvent cependant, les hommes sont faibles lorsqu'il s'agit de réprimer ou de contrôler leurs désirs.
+\end{solution}
 
 %
 \end{document}
