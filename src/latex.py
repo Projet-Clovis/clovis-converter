@@ -14,12 +14,10 @@ date = "2021 - 2022"
 header = f"""\\title{{{study_sheet_name}}}
 \\author{{{author}}}
 \\date{{{date}}}
-\\begin{{document}}
-\\normalsize
-\\maketitle
 """
 
-doc.append(NoEscape(r'\tableofcontents'))
+doc.preamble.append(NoEscape(header))
+doc.append(NoEscape(r'\normalsize\maketitle' '\n' r'\tableofcontents'))
 doc.append(NewPage())
 
 with doc.create(Section('Le sujet')):
