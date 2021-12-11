@@ -31,11 +31,7 @@
 % -------------------- Styles --------------------
 \mdfdefinestyle{mystyle}{%
   innertopmargin=10px,
-  innerbottommargin=10px,
-  firstextra={%
-    \path let \p1=(P), \p2=(O) 
-    in node[font=\bfseries] at ([yshift=-2ex]0.5*\x1-\x2,\y1) {Solution};
-  }
+  innerbottommargin=10px
 }
 \newmdenv[style=mystyle]{solution}
 
@@ -74,7 +70,7 @@ Descartes donne un définition universelle du sujet, valable pour tous les humai
 \end{tcolorbox}
 
 \begin{solution}
-{ \footnotesize \textcolor{danger}{ATTENTION}}
+{ \footnotesize \textcolor{danger}{\faIcon{exclamation-triangle} ATTENTION}}
 \vspace{3px}
 \\ Par le désir, l'Homme fait l'expérience du manque et de la souffrance. Souvent cependant, les hommes sont faibles lorsqu'il s'agit de réprimer ou de contrôler leurs désirs.
 \end{solution}
