@@ -1,4 +1,6 @@
 \documentclass{article}%
+
+% -------------------- Packages --------------------
 \usepackage[T1]{fontenc}%
 \usepackage[utf8]{inputenc}%
 \usepackage{lmodern}%
@@ -6,14 +8,36 @@
 \usepackage{lastpage}%
 \usepackage{tcolorbox}%
 \usepackage{xcolor}%
-%
+
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{tikzpagenodes}
+\usetikzlibrary{calc}
+
+
+% -------------------- Title --------------------
 \title{Algorithmes d'Optimisation des Graphes}%
 \author{Licence 3}%
 \date{2021 {-} 2022}%
 \normalsize%
 
+
+% -------------------- Colors --------------------
 \definecolor{danger}{HTML}{e6505f}
 \definecolor{danger-bg}{HTML}{fce5e7}
+
+
+% -------------------- Styles --------------------
+\mdfdefinestyle{mystyle}{%
+  leftmargin=2ex,
+  innertopmargin=2\baselineskip,
+  skipabove={\dimexpr0.5\baselineskip+\topskip\relax},
+  skipbelow={\dimexpr0.5\baselineskip+\topskip\relax},
+  firstextra={%
+    \path let \p1=(P), \p2=(O) 
+    in node[font=\bfseries] at ([yshift=-2ex]0.5*\x1-\x2,\y1) {Solution};
+  }
+}
+
 %
 \begin{document}%
 \normalsize%
