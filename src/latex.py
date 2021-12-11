@@ -1,3 +1,5 @@
+from pylatex import Package
+
 from pylatex import Document, Section, Subsection, Command
 from pylatex.utils import bold, italic, NoEscape
 from pylatex.basic import NewPage
@@ -11,13 +13,14 @@ study_sheet_name = "Algorithmes d'Optimisation des Graphes"
 author = "Licence 3"
 date = "2021 - 2022"
 
-header = f"""\\title{{{study_sheet_name}}}
-\\author{{{author}}}
-\\date{{{date}}}
-"""
+doc.preamble.append(Command('title', study_sheet_name))
+doc.preamble.append(Command('author', author))
+doc.preamble.append(Command('date', date))
+doc.preamble.append(Command('normalsize'))
 
-doc.preamble.append(NoEscape(header))
-doc.append(NoEscape(r'\normalsize\maketitle' '\n' r'\tableofcontents'))
+doc.append(Command('maketitle'))
+doc.append(Command('tableofcontents'))
+
 doc.append(NewPage())
 
 with doc.create(Section('Le sujet')):
