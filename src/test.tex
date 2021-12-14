@@ -26,6 +26,15 @@
 % -------------------- Colors --------------------
 \definecolor{danger}{HTML}{e6505f}
 \definecolor{danger-bg}{HTML}{fce5e7}
+\definecolor{summary}{HTML}{e8ae95}
+\definecolor{summary-bg}{HTML}{fcf3ef}
+\definecolor{definition}{HTML}{2f80ed}
+\definecolor{definition-bg}{HTML}{e0ecfd}
+
+\definecolor{code-bg}{HTML}{2d334b}
+
+\definecolor{border-color}{HTML}{dadce0}
+
 
 
 % -------------------- Styles --------------------
@@ -42,6 +51,7 @@
 % -------------------- Document --------------------
 \begin{document}%
 \normalsize%
+\sffamily
 \maketitle%
 \tableofcontents%
 \newpage%
@@ -71,6 +81,23 @@ Descartes donne un définition universelle du sujet, valable pour tous les humai
 { \scriptsize \textcolor{danger}{\faIcon{exclamation-triangle} \textbf{ATTENTION}}}
 \vspace{3px}
 \\ Par le désir, l'Homme fait l'expérience du manque et de la souffrance. Souvent cependant, les hommes sont faibles lorsqu'il s'agit de réprimer ou de contrôler leurs désirs.
+\end{solution}
+
+\begin{solution}[linecolor=summary, backgroundcolor=summary-bg]
+{ \scriptsize \textcolor{summary}{\faIcon{graduation-cap} \textbf{RÉSUMÉ}}}
+\vspace{3px}
+\\ Par le désir, l'Homme fait l'expérience du manque et de la souffrance. Souvent cependant, les hommes sont faibles lorsqu'il s'agit de réprimer ou de contrôler leurs désirs.
+\end{solution}
+
+\begin{mdframed}[topline=false, bottomline=false, linecolor=border-color]
+\begin{center}
+    Malheur à qui n'a plus rien à désirer !
+    \\ Rousseau
+\end{center}
+\end{mdframed}
+
+\begin{solution}[linecolor=code-bg, backgroundcolor=code-bg]
+\textcolor{white}{\texttt{npm install puppeteer}}
 \end{solution}
 
 %
