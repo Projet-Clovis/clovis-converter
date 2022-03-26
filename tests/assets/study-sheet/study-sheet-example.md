@@ -7,22 +7,22 @@
 
 <!-- Title : h1 -->
 <div class="block">
-    <h1 class="title">Cracking the code for sales and influence</h1>
+    <h1 class="title">Some h1 title</h1>
 </div>
 
 <!-- Title : h2 -->
 <div class="block">
-    <h2 class="title">The Three Tens</h2>
+    <h2 class="title">Some h2 title</h2>
 </div>
 
 <!-- Title : h3 -->
 <div class="block">
-    <h3 class="title">The product, idea, or concept</h3>
+    <h3 class="title">Some h3 title</h3>
 </div>
 
 <!-- Title : h4 -->
 <div class="block">
-    <h4 class="title">The four elements of the not so straight line system</h4>
+    <h4 class="title">Some h4 title</h4>
 </div>
 
 <!-- Colorful block : summary -->
