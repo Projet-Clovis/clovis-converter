@@ -20,14 +20,20 @@ document.append(Command('tableofcontents'))
 
 document.append(NewPage())
 
+doc = ''
+
 
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:", tag, attrs)
         attrs = dict(attrs)
 
-        if tag == 'b':
-            htmlStyle['bold'] = 1
+        if tag == 'h1':
+            doc += r"\section{"
+        elif tag == 'h2':
+            doc += r"\subsection{"
+        elif tag == 'h3':
+            doc += r"\subsubsection{"
         elif tag == 'i':
             htmlStyle['italic'] = 1
         elif tag == 'u':
