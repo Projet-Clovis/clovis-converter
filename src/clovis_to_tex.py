@@ -90,10 +90,6 @@ class MyHTMLParser(HTMLParser):
 
 
 parser = MyHTMLParser(doc)
-"""parser.feed('<html><head><title>Test</title></head>'
-            '<body><h1>Parse me!</h1></body></html>')
-"""
-
 
 
 study_sheet_example = '''<!-- Text -->
@@ -126,4 +122,5 @@ study_sheet_example = '''<!-- Text -->
 </div>'''
 
 parser.feed(study_sheet_example)
+parser.doc += r"\end{document}" + "\n"
 
