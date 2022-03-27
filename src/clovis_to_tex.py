@@ -59,6 +59,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += r"\subsection{"
         elif tag == 'h3':
             self.doc += r"\subsubsection{"
+        elif tag == 'h4':
+            self.doc += r"\paragraph{"
         elif tag == 'b':
             self.doc += r"\textbf{"
         elif tag == 'i':
@@ -74,6 +76,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += "}\n"
         elif tag == 'h3':
             self.doc += "}\n"
+        elif tag == 'h4':
+            self.doc += r"}\n"
         elif tag == 'b':
             self.doc += "}"
         elif tag == 'i':
