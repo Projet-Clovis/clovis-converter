@@ -33,6 +33,9 @@ doc = r'''
 \date{2021 {-} 2022}%
 \normalsize%
 %
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+%
 \begin{document}%
 \normalsize%
 \maketitle%
