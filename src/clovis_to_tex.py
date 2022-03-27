@@ -20,105 +20,105 @@ document.append(Command('tableofcontents'))
 
 document.append(NewPage())
 
-doc = ''
+doc = '''
+\documentclass{article}%
+\usepackage[T1]{fontenc}%
+\usepackage[utf8]{inputenc}%
+\usepackage{lmodern}%
+\usepackage{textcomp}%
+\usepackage{lastpage}%
+%
+\title{Algorithmes d'Optimisation des Graphes}%
+\author{Licence 3}%
+\date{2021 {-} 2022}%
+\normalsize%
+%
+\begin{document}%
+\normalsize%
+\maketitle%
+\tableofcontents%
+\newpage%
+'''
 
 
 class MyHTMLParser(HTMLParser):
+    def __init__(self, latex_document):
+        super().__init__()
+        self.doc = latex_document
+
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:", tag, attrs)
         attrs = dict(attrs)
 
         if tag == 'h1':
-            doc += r"\section{"
+            self.doc += r"\section{"
         elif tag == 'h2':
-            doc += r"\subsection{"
+            self.doc += r"\subsection{"
         elif tag == 'h3':
-            doc += r"\subsubsection{"
+            self.doc += r"\subsubsection{"
+        elif tag == 'b':
+            self.doc += r"\textbf{"
         elif tag == 'i':
-            htmlStyle['italic'] = 1
-        elif tag == 'u':
-            htmlStyle['underline'] = 1
-        elif tag == 'sup':
-            htmlStyle['sup'] = 1
-        elif tag == 'sub':
-            htmlStyle['sub'] = 1
-        elif tag == 'span':
-            if attrs['class'] == 'f-code':
-                htmlStyle['f-code'] = 1
-            elif attrs['class'] == 'hl-yellow':
-                htmlStyle['hl-yellow'] = 1
+            self.doc += r"\textit{"
 
 
     def handle_endtag(self, tag):
         print("Encountered an end tag :", tag)
 
-        if tag == 'b':
-            htmlStyle['bold'] = 0
+        if tag == 'h1':
+            self.doc += "}\n"
+        elif tag == 'h2':
+            self.doc += "}\n"
+        elif tag == 'h3':
+            self.doc += "}\n"
+        elif tag == 'b':
+            self.doc += "}\n"
         elif tag == 'i':
-            htmlStyle['italic'] = 0
-        elif tag == 'u':
-            htmlStyle['underline'] = 0
-        elif tag == 'sup':
-            htmlStyle['sup'] = 0
-        elif tag == 'sub':
-            htmlStyle['sub'] = 0
-        elif tag == 'span':
-            htmlStyle['f-code'] = 0
-            htmlStyle['hl-yellow'] = 0
-            #todo : mettre une pile pour savoir la classe correspondante ?
+            self.doc += "}\n"
 
-            
+
     def handle_data(self, data):
         print("Encountered some data  :", data)
 
-        run = p.add_run(data)
-
-        if htmlStyle['bold']:
-            run.bold = True
-
-        if htmlStyle['italic']:
-            run.italic = True
-
-        if htmlStyle['underline']:
-            run.underline = True
-
-        if htmlStyle['sup']:
-            run.font.superscript = True
-
-        if htmlStyle['sub']:
-            run.font.subscript = True
-
-        if htmlStyle['hl-yellow']:
-            run.font.highlight_color = WD_COLOR_INDEX.YELLOW
-
-        if htmlStyle['f-code']:
-            run.font.name = 'Courier New'
-            run.font.highlight_color = WD_COLOR_INDEX.GRAY_25
+        self.doc += data
 
 
 
-parser = MyHTMLParser()
+parser = MyHTMLParser(doc)
 """parser.feed('<html><head><title>Test</title></head>'
             '<body><h1>Parse me!</h1></body></html>')
 """
 
 
 
-a = 'On ne peut pas faire une liste d\'<span class="f-code">int</span> car les listes acceptent uniquement les <b>Objets </b>et pas les <b>types primitifs</b>.<br>'
-a = 'On ne peut pas faire une liste d\'<span class="f-code">int</span> car les listes acceptent uniquement les <b>Objets </b>et pas les <b>types primitifs</b>.<br><br>Marco je ne rigole pas avec la fonction e<sup>x</sup> surtout avec x<sub>0</sub> = <u>lmao</u>.<br>J\'espère que <i><b>fusionner </b></i>les <span class="f-code"><i><u><b>st<sup>y</sup>l<sub>e</sub>s</b></u></i></span> fera pas tout bug.<br>'
+study_sheet_example = '''<!-- Text -->
+<p class="text">Some text.</p>
 
-if a[-4:] == '<br>': # if the 4 last characters is a <br>, remove it
-    a = a[:-4] # without the 4 last characters
+<!-- Formatted text -->
+<p class="text">Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</p>
 
-b = a.split('<br>')
+<!-- Title : h1 -->
+<h1 class="title">Some h1 title</h1>
 
-for i in range(len(b)-1): #
-    parser.feed(b[i])
-    p.add_run('\n')
-parser.feed(b[-1]) # the last element (to not add a '\n' at the end)
+<!-- Title : h2 -->
+<h2 class="title">Some h2 title</h2>
 
-#parser.feed(a)
+<!-- Title : h3 -->
+<h3 class="title">Some h3 title</h3>
 
-import os
-os.chdir('') #todo
-document.generate_tex()
+<!-- Title : h4 -->
+<h4 class="title">Some h4 title</h4>
+
+<!-- Colorful block : summary -->
+<div class="cb-container summary">
+    <div class="colorful-block">
+        <div class="cb-title-container">
+            <span class="cb-title-icon"></span>
+            <span class="cb-title"></span>
+        </div>
+        <p class="text">Some text, Clovis is the best.</p>
+    </div>
+</div>'''
+
+parser.feed(study_sheet_example)
+
