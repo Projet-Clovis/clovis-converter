@@ -20,7 +20,7 @@ document.append(Command('tableofcontents'))
 
 document.append(NewPage())
 
-doc = '''
+doc = r'''
 \documentclass{article}%
 \usepackage[T1]{fontenc}%
 \usepackage[utf8]{inputenc}%
@@ -72,9 +72,11 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'h3':
             self.doc += "}\n"
         elif tag == 'b':
-            self.doc += "}\n"
+            self.doc += "}"
         elif tag == 'i':
-            self.doc += "}\n"
+            self.doc += "}"
+        elif tag == 'p':
+            self.doc += r'\\'
 
 
     def handle_data(self, data):
