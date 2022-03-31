@@ -1,20 +1,8 @@
 from html.parser import HTMLParser
 
-document = Document()
-
 study_sheet_name = "Algorithmes d'Optimisation des Graphes"
 author = "Licence 3"
 date = "2021 - 2022"
-
-document.preamble.append(Command('title', study_sheet_name))
-document.preamble.append(Command('author', author))
-document.preamble.append(Command('date', date))
-document.preamble.append(Command('normalsize'))
-
-document.append(Command('maketitle'))
-document.append(Command('tableofcontents'))
-
-document.append(NewPage())
 
 doc = r'''
 \documentclass{article}%
