@@ -41,6 +41,8 @@ doc = r'''
 \maketitle%
 \tableofcontents%
 \newpage%
+
+
 '''
 
 
@@ -71,19 +73,19 @@ class MyHTMLParser(HTMLParser):
         print("Encountered an end tag :", tag)
 
         if tag == 'h1':
-            self.doc += "}\n"
+            self.doc += "}\n\n"
         elif tag == 'h2':
-            self.doc += "}\n"
+            self.doc += "}\n\n"
         elif tag == 'h3':
-            self.doc += "}\n"
+            self.doc += "}\n\n"
         elif tag == 'h4':
-            self.doc += r"}\n"
+            self.doc += "}\n\n"
         elif tag == 'b':
             self.doc += "}"
         elif tag == 'i':
             self.doc += "}"
         elif tag == 'p':
-            self.doc += r'\\'
+            self.doc += r'\\' + "\n\n"
 
 
     def handle_data(self, data):
@@ -92,7 +94,7 @@ class MyHTMLParser(HTMLParser):
         data = data.strip() # todo: escape caracters
 
         if data != '':
-            self.doc += f'({data})'
+            self.doc += data
 
 
 
