@@ -15,13 +15,13 @@ class MyHTMLParser(HTMLParser):
         attrs = dict(attrs)
 
         if tag == 'h1':
-            self.doc += '#'
+            self.doc += '# '
         elif tag == 'h2':
-            self.doc += '##'
+            self.doc += '## '
         elif tag == 'h3':
-            self.doc += '###'
+            self.doc += '### '
         elif tag == 'h4':
-            self.doc += '####'
+            self.doc += '#### '
         elif tag == 'b':
             self.doc += '**'
         elif tag == 'i':
