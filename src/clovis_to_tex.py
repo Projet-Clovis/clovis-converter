@@ -1,7 +1,3 @@
-from pylatex import Package, Document, Section, Subsection, Command
-from pylatex.utils import bold, italic, NoEscape
-from pylatex.basic import NewPage
-
 from html.parser import HTMLParser
 
 document = Document()
