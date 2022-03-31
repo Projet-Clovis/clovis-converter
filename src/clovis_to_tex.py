@@ -73,11 +73,9 @@ class MyHTMLParser(HTMLParser):
 
 
     def handle_data(self, data):
-        print("Encountered some data  :", data)
+        print("Encountered some data  :", repr(data))
 
-        data = data.strip() # todo: escape caracters
-
-        if data != '':
+        if data.strip() != '':
             self.doc += data
 
 
