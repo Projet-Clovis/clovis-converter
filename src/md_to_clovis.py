@@ -26,6 +26,10 @@ class MyRenderer(mistune.HTMLRenderer):
         return f'<p class="text">{text}</p>\n'
 
 
+    def linebreak(self):
+        return '<br>'
+
+
     def strong(self, text):
         return f'<b>{text}</b>'
 
