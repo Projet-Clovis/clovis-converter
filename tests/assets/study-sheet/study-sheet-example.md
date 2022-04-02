@@ -18,7 +18,7 @@
 <!-- Title : h4 -->
 <h4 class="title">Some h4 title</h4>
 
-<!-- Colorful block : summary -->
+<!-- Colorful block : danger -->
 <div class="cb-container danger">
     <div class="cb-title-container">
         <span class="cb-title-icon"></span>
