@@ -19,13 +19,11 @@
 <h4 class="title">Some h4 title</h4>
 
 <!-- Colorful block : summary -->
-<div class="cb-container summary">
-    <div class="colorful-block">
-        <div class="cb-title-container">
-            <span class="cb-title-icon"></span>
-            <span class="cb-title"></span>
-        </div>
-        <p class="text">Some text, Clovis is the best.</p>
+<div class="cb-container danger">
+    <div class="cb-title-container">
+        <span class="cb-title-icon"></span>
+        <span class="cb-title"></span>
     </div>
+    <p class="text">Some text, Clovis is the best.</p>
 </div>
 ```
