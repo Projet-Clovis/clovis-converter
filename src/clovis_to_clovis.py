@@ -32,6 +32,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += '<b>'
         elif tag == 'i':
             self.doc += '<i>'
+        elif tag == 'br':
+            self.doc += '<br>'
 
 
     def handle_endtag(self, tag):
