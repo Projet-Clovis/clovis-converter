@@ -7,7 +7,8 @@ from bs4 import BeautifulSoup
 from html.parser import HTMLParser
 
 TAGS_LIST = ('h1', 'h2', 'h3', 'h4', 'p', 'b', 'i')
-COLORFUL_BLOCKS = ('danger', 'reminder', 'byheart')
+COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
+                'danger', 'summary', 'reminder', 'advice', 'remark')
 CLASS_LIST = ()
 
 
@@ -84,9 +85,9 @@ study_sheet_example = '''<div class="container"><div class="block-edit-button-co
 
 
 soup = BeautifulSoup(study_sheet_example, 'html.parser')
-articles = soup.find_all('article')
+mini_titles = soup.find_all(class_='mini-title')
 
-for a in articles: # colorful-block titles
+for a in mini_titles: # colorful-block titles
     a.clear()
 
 cb_content = soup.find_all(class_='cb-content')
