@@ -29,12 +29,17 @@ class MyHTMLParser(HTMLParser):
             self.doc += '<h3 class="title">'
         elif tag == 'h4':
             self.doc += '<h4 class="title">'
+
+        elif tag == 'p' and 'definition-title' in attrs['class']:
+            self.doc += '<p class="definition-title">'
         elif tag == 'p':
             self.doc += '<p class="text">'
+
         elif tag == 'b':
             self.doc += '<b>'
         elif tag == 'i':
             self.doc += '<i>'
+
         elif tag == 'br':
             self.doc += '<br>'
 
