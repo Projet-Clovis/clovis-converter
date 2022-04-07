@@ -11,36 +11,38 @@ class MyHTMLParser(HTMLParser):
         attrs = dict(attrs)
 
         if tag == 'h1':
-            self.doc += '# '
+            self.doc += '<h1 class="title">'
         elif tag == 'h2':
-            self.doc += '## '
+            self.doc += '<h2 class="title">'
         elif tag == 'h3':
-            self.doc += '### '
+            self.doc += '<h3 class="title">'
         elif tag == 'h4':
-            self.doc += '#### '
+            self.doc += '<h4 class="title">'
+        elif tag == 'p':
+            self.doc += '<p class="text">'
         elif tag == 'b':
-            self.doc += '**'
+            self.doc += '<b>'
         elif tag == 'i':
-            self.doc += '*'
+            self.doc += '<i>'
 
 
     def handle_endtag(self, tag):
         print("Encountered an end tag :", tag)
 
         if tag == 'h1':
-            self.doc += '\n\n'
+            self.doc += '</h1>'
         elif tag == 'h2':
-            self.doc += '\n\n'
+            self.doc += '</h2>'
         elif tag == 'h3':
-            self.doc += '\n\n'
+            self.doc += '</h3>'
         elif tag == 'h4':
-            self.doc += '\n\n'
-        elif tag == 'b':
-            self.doc += '**'
-        elif tag == 'i':
-            self.doc += '*'
+            self.doc += '</h4>'
         elif tag == 'p':
-            self.doc += '  \n\n'
+            self.doc += '</p>'
+        elif tag == 'b':
+            self.doc += '</b>'
+        elif tag == 'i':
+            self.doc += '</i>'
 
 
     def handle_data(self, data):
