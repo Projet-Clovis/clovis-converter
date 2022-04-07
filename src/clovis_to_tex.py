@@ -12,6 +12,45 @@ doc = r'''
 \usepackage{textcomp}%
 \usepackage{lastpage}%
 %
+\usepackage{fontawesome5}
+%
+\usepackage{xcolor}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{tikzpagenodes}
+\usetikzlibrary{calc}
+%
+
+% -------------------- Couleurs --------------------
+\definecolor{definition}{HTML}{2f80ed}
+\definecolor{definition-bg}{HTML}{e0ecfd}
+
+\definecolor{danger-color}{HTML}{e6505f}
+\definecolor{danger-bg-color}{HTML}{fce5e7}
+
+
+
+% -------------------- Macros --------------------
+\mdfdefinestyle{definition-style}{%
+  innertopmargin=10px,
+  innerbottommargin=10px,
+  linecolor=definition,
+  backgroundcolor=definition-bg,
+  roundcorner=4px
+}
+\newmdenv[style=definition-style]{definition}
+
+\newcommand\clovisDefinition[2]{
+    \begin{definition}
+    { \scriptsize \textcolor{definition}{\faIcon{graduation-cap} \textbf{DEFINITION}}}
+    \vspace{3px}
+    \\ \underline{\textbf{#1}}
+    \vspace{2.5px}
+    \\ #2
+    \end{definition}
+}
+
+
+% -------------------- Study Sheet --------------------
 \title{Algorithmes d'Optimisation des Graphes}%
 \author{Licence 3}%
 \date{2021 {-} 2022}%
@@ -47,10 +86,20 @@ class MyHTMLParser(HTMLParser):
             self.doc += r"\subsubsection{"
         elif tag == 'h4':
             self.doc += r"\paragraph{"
+
+        elif tag == 'p' and 'definition-title' in attrs['class']:
+            self.doc += ''
+
         elif tag == 'b':
             self.doc += r"\textbf{"
         elif tag == 'i':
             self.doc += r"\textit{"
+
+        elif tag == 'section' and 'colorful-block' in attrs['class']:
+            colorful_block_class = attrs['class'].split()[-1]
+            colorful_block_class = colorful_block_class.capitalize()
+
+                self.doc += "\\" + colorful_block_class + "{"
 
 
     def handle_endtag(self, tag):
