@@ -1,3 +1,8 @@
+"""
+Used to convert old Clovis study sheet to the new format.
+And later, may be used to validate study sheet?
+"""
+
 from html.parser import HTMLParser
 
 
@@ -56,34 +61,31 @@ class MyHTMLParser(HTMLParser):
 parser = MyHTMLParser()
 
 
-study_sheet_example = '''<!-- Text -->
-<p class="text">Some text.</p>
-
-<!-- Formatted text -->
-<p class="text">Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</p>
-
-<!-- Title : h1 -->
-<h1 class="title">Some h1 title</h1>
-
-<!-- Title : h2 -->
-<h2 class="title">Some h2 title</h2>
-
-<!-- Title : h3 -->
-<h3 class="title">Some h3 title</h3>
-
-<!-- Title : h4 -->
-<h4 class="title">Some h4 title</h4>
-
-<!-- Colorful block : summary -->
-<div class="cb-container summary">
-    <div class="colorful-block">
-        <div class="cb-title-container">
-            <span class="cb-title-icon"></span>
-            <span class="cb-title"></span>
-        </div>
-        <p class="text">Some text, Clovis is the best.</p>
-    </div>
-</div>'''
+study_sheet_example = '''<div class="block toggle-h1" data-hide="h1-1">
+                    <h1 class="title">Prologue : The Birth of a Sales System</h1>
+                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
+                <div class="block hide-h1-1" style="">
+                    <p class="text">For example, do they think you’re a likable, trustworthy person, who is not only an expert in your field but also prides yourself on putting your customer’s needs first and making sure that if any problems arise you’ll be right there on the spot to resolve them?</p>
+                </div>
+                <div class="block hide-h1-1" style="">
+                    <p class="text">Some text.</p>
+                </div>
+                <div class="block toggle-h1" data-hide="h1-2">
+                    <h1 class="title">Cracking the code for sales and influence</h1>
+                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
+                <div class="block toggle-h1" data-hide="h1-3">
+                    <h2 class="title">The Three Tens</h2>
+                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
+                <div class="block toggle-h1" data-hide="h1-4">
+                    <h3 class="title">The product, idea, or concept</h3>
+                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
+                <div class="block toggle-h1" data-hide="h1-5">
+                    <h4 class="title">The four elements of the not so straight line system</h4>
+                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
+                <div class="block hide-h1-5">
+                    <p class="text">Complexity kills. It sucks the life out of developers, it makes products difficult to plan, build and test, it introduces security challenges, and it causes end-user and administrator frustration. (Ray Ozzie) In C++ it’s harder to shoot yourself in the foot, but when you do, you blow off your whole leg. (Bjarne Stroustrup) If debugging is the process of removing software bugs, then programming must be the process of putting them in. (Edsger Dijkstra) Measuring programming progress by lines of code is like measuring aircraft building progress by weight. (Bill Gates)
+                    </p>
+                </div>'''
 
 parser.feed(study_sheet_example)
 parser.doc += '\n'
