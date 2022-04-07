@@ -5,6 +5,9 @@ And later, may be used to validate study sheet?
 
 from html.parser import HTMLParser
 
+TAGS_LIST = ('h1', 'h2', 'h3', 'h4', 'p', 'b', 'i')
+CLASS_LIST = ()
+
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -35,19 +38,19 @@ class MyHTMLParser(HTMLParser):
         print("Encountered an end tag :", tag)
 
         if tag == 'h1':
-            self.doc += '</h1>'
+            self.doc += '</h1>\n'
         elif tag == 'h2':
-            self.doc += '</h2>'
+            self.doc += '</h2>\n'
         elif tag == 'h3':
-            self.doc += '</h3>'
+            self.doc += '</h3>\n'
         elif tag == 'h4':
-            self.doc += '</h4>'
+            self.doc += '</h4>\n'
         elif tag == 'p':
-            self.doc += '</p>'
+            self.doc += '</p>\n'
         elif tag == 'b':
-            self.doc += '</b>'
+            self.doc += '</b>\n'
         elif tag == 'i':
-            self.doc += '</i>'
+            self.doc += '</i>\n'
 
 
     def handle_data(self, data):
@@ -61,31 +64,8 @@ class MyHTMLParser(HTMLParser):
 parser = MyHTMLParser()
 
 
-study_sheet_example = '''<div class="block toggle-h1" data-hide="h1-1">
-                    <h1 class="title">Prologue : The Birth of a Sales System</h1>
-                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
-                <div class="block hide-h1-1" style="">
-                    <p class="text">For example, do they think you’re a likable, trustworthy person, who is not only an expert in your field but also prides yourself on putting your customer’s needs first and making sure that if any problems arise you’ll be right there on the spot to resolve them?</p>
-                </div>
-                <div class="block hide-h1-1" style="">
-                    <p class="text">Some text.</p>
-                </div>
-                <div class="block toggle-h1" data-hide="h1-2">
-                    <h1 class="title">Cracking the code for sales and influence</h1>
-                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
-                <div class="block toggle-h1" data-hide="h1-3">
-                    <h2 class="title">The Three Tens</h2>
-                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
-                <div class="block toggle-h1" data-hide="h1-4">
-                    <h3 class="title">The product, idea, or concept</h3>
-                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
-                <div class="block toggle-h1" data-hide="h1-5">
-                    <h4 class="title">The four elements of the not so straight line system</h4>
-                <div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div>
-                <div class="block hide-h1-5">
-                    <p class="text">Complexity kills. It sucks the life out of developers, it makes products difficult to plan, build and test, it introduces security challenges, and it causes end-user and administrator frustration. (Ray Ozzie) In C++ it’s harder to shoot yourself in the foot, but when you do, you blow off your whole leg. (Bjarne Stroustrup) If debugging is the process of removing software bugs, then programming must be the process of putting them in. (Edsger Dijkstra) Measuring programming progress by lines of code is like measuring aircraft building progress by weight. (Bill Gates)
-                    </p>
-                </div>'''
+study_sheet_example = '''
+                    <div class="container"><div class="block-edit-button-container"></div><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p></div><div class="container"><div class="block-edit-button-container"></div><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p></div><div class="container"><div class="block-edit-button-container"></div><p placeholder="Sous-partie" class="subpart" data-count="a) " contenteditable="false">Some h3</p></div><div class="container"><div class="block-edit-button-container"></div><p placeholder="Titre inférieur" class="subhead" data-count="1) " contenteditable="false">Some h4</p></div><div class="container"><div class="block-edit-button-container"></div><p placeholder="Entrez du texte" class="text" contenteditable="false">Some text<br></p></div><div class="container"><div class="block-edit-button-container"></div><section class="colorful-block danger"><section class="cb-content"><article class="mini-title mt-danger">Attention</article><p placeholder="Avertissement important" contenteditable="false">Some warning<br></p></section></section></div>'''
 
 parser.feed(study_sheet_example)
 parser.doc += '\n'
