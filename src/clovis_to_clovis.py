@@ -143,11 +143,11 @@ study_sheet_example = '''<div id="main-content" class="preview" style="padding-l
 ## Main
 soup = BeautifulSoup(study_sheet_example, 'html.parser')
 
-remove_tags(soup, 'mini-title')
-remove_tags(soup, 'block-edit-button-container')
-remove_tags(soup, 'material-icons')
+remove_tags(soup, '.mini-title')
+remove_tags(soup, '.block-edit-button-container')
+remove_tags(soup, '.material-icons')
 
-rename_tags(soup, 'cb-content')
+rename_tags(soup, '.cb-content')
 
 parser.feed(str(soup))
 parser.doc += '\n'
