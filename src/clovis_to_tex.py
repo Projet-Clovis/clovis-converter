@@ -1,4 +1,6 @@
+from bs4 import BeautifulSoup
 from html.parser import HTMLParser
+from common import remove_tags, rename_tags
 
 study_sheet_name = "Study Sheet Name"
 author = "Study Sheet Author"
@@ -33,8 +35,8 @@ doc = r'''
 \definecolor{code-bg-color}{HTML}{fcfcfc} % todo: temp color
 \definecolor{code-border-color}{HTML}{dadce0} % todo: temp color
 
-\definecolor{code-border-color}{HTML}{dadce0} % todo: temp color
-FEF3C7
+\definecolor{hl-yellow-color}{HTML}{fef3c7}
+
 
 
 % -------------------- Macros --------------------
@@ -45,6 +47,11 @@ FEF3C7
     \hl{#2}%
     \endgroup
 }
+
+\newcommand{\hlYellow}[1]{%
+    \highlight{hl-yellow-color}{#1}%
+}
+
 
 
 % inlineCode (without border)
@@ -119,6 +126,8 @@ class MyHTMLParser(HTMLParser):
         super().__init__()
         self.doc = ''
 
+        self.definition_active = False
+
 
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:", tag, attrs)
@@ -133,22 +142,28 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'h4':
             self.doc += r"\paragraph{"
 
-        elif tag == 'p' and 'definition-title' in attrs['class']:
-            self.doc += ''
+        elif tag == 'p' and 'class' in attrs:
+            if 'definition-title' in attrs['class']:
+                self.doc += r'\clovisDefinition{'
+            elif 'text' in attrs['class']:
+                if self.definition_active:
+                    self.doc += '}'
 
         elif tag == 'b':
             self.doc += r"\textbf{"
         elif tag == 'i':
             self.doc += r"\textit{"
 
-        elif tag == 'section' and 'colorful-block' in attrs['class']:
-            colorful_block_class = attrs['class'].split()[-1]
-            colorful_block_class = colorful_block_class.capitalize()
-            #TODO
-            self.doc += "\\" + colorful_block_class + "{"
+        elif tag == 'div' and 'class' in attrs:
+            if 'cb-container' in attrs['class']:
+                if 'definition' in attrs['class']:
+                    self.definition_active = True
 
-        elif tag == 'span' and 'colorful-block' in attrs['class']:
-            self.doc += r"\textit{"
+        elif tag == 'span' and 'class' in attrs:
+            if 'hl-yellow' in attrs['class']:
+                self.doc += r"\hlYellow{"
+            if 'f-code' in attrs['class']:
+                self.doc += r"\inlineCode{"
 
 
     def handle_endtag(self, tag):
@@ -162,12 +177,17 @@ class MyHTMLParser(HTMLParser):
             self.doc += "}\n\n"
         elif tag == 'h4':
             self.doc += "}\n\n"
+
         elif tag == 'b':
             self.doc += "}"
         elif tag == 'i':
             self.doc += "}"
+
         elif tag == 'p':
             self.doc += r'\\' + "\n\n"
+
+        elif tag == 'span':
+            self.doc += "}"
 
 
     def handle_data(self, data):
@@ -178,16 +198,7 @@ class MyHTMLParser(HTMLParser):
 
 
 
-parser = MyHTMLParser()
-
-
-study_sheet_example = '''<!-- Text -->
-<p class="text">Some text.</p>
-
-<!-- Formatted text -->
-<p class="text">Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</p>
-
-<!-- Title : h1 -->
+study_sheet_example = '''<!-- Title : h1 -->
 <h1 class="title">Some h1 title</h1>
 
 <!-- Title : h2 -->
@@ -199,17 +210,45 @@ study_sheet_example = '''<!-- Text -->
 <!-- Title : h4 -->
 <h4 class="title">Some h4 title</h4>
 
-<!-- Colorful block : summary -->
-<div class="cb-container summary">
-    <div class="colorful-block">
-        <div class="cb-title-container">
-            <span class="cb-title-icon"></span>
-            <span class="cb-title"></span>
-        </div>
-        <p class="text">Some text, Clovis is the best.</p>
-    </div>
-</div>'''
+<!-- Text -->
+<p class="text">Some text.</p>
 
-parser.feed(study_sheet_example)
+<!-- Formatted text -->
+<p class="text">Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</p>
+
+<!-- Formatted text : even more -->
+<p class="text">Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span>.</p>
+
+<!-- Inline code -->
+<p class="text">Some <span class="f-code">inline code</span>.</p>
+
+<!-- Colorful block : danger -->
+<div class="cb-container danger">
+    <div class="cb-title-container">
+        <span class="cb-title-icon"></span>
+        <span class="cb-title"></span>
+    </div>
+    <p class="text">Some warning</p>
+</div>
+
+<!-- Colorful block : definition -->
+<div class="cb-container definition">
+    <div class="cb-title-container">
+        <span class="cb-title-icon"></span>
+        <span class="cb-title"></span>
+    </div>
+    <p class="definition-title">Some word</p>
+    <p class="text">Some definition</p>
+</div>
+'''
+
+## Main
+soup = BeautifulSoup(study_sheet_example, 'html.parser')
+
+rename_tags(soup, 'definition-title', 'definition-title')
+
+parser = MyHTMLParser()
+
+parser.feed(str(soup))
 parser.doc += r"\end{document}" + "\n"
 
