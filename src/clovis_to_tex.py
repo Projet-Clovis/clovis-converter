@@ -12,7 +12,8 @@ doc = r'''
 \usepackage{textcomp}%
 \usepackage{lastpage}%
 %
-\usepackage{soul}
+\usepackage{soul} % highlighting
+\usepackage{inconsolata} % monospace font
 \usepackage{fontawesome5}
 %
 \usepackage{xcolor}
@@ -28,6 +29,8 @@ doc = r'''
 \definecolor{danger-color}{HTML}{e6505f}
 \definecolor{danger-bg-color}{HTML}{fce5e7}
 
+\definecolor{code-bg-color}{HTML}{f0f0f0} % todo: temp color
+
 
 
 % -------------------- Macros --------------------
@@ -38,6 +41,12 @@ doc = r'''
     \hl{#2}%
     \endgroup
 }
+
+
+\newcommand{\inlineCode}[1]{%
+    {\small\tt \highlight{code-bg-color}{#1}}%
+}
+
 
 \mdfdefinestyle{definition-style}{%
   innertopmargin=10px,
