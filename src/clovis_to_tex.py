@@ -119,6 +119,7 @@ class MyHTMLParser(HTMLParser):
         super().__init__()
         self.doc = ''
 
+
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:", tag, attrs)
         attrs = dict(attrs)
