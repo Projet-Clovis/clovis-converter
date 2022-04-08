@@ -1,8 +1,9 @@
 from html.parser import HTMLParser
 
-study_sheet_name = "Algorithmes d'Optimisation des Graphes"
-author = "Licence 3"
-date = "2021 - 2022"
+study_sheet_name = "Study Sheet Name"
+author = "Study Sheet Author"
+date = r"\today"
+
 
 doc = r'''
 \documentclass{article}%
@@ -22,7 +23,7 @@ doc = r'''
 \usetikzlibrary{calc}
 %
 
-% -------------------- Couleurs --------------------
+% -------------------- Colors --------------------
 \definecolor{definition}{HTML}{2f80ed}
 \definecolor{definition-bg}{HTML}{e0ecfd}
 
@@ -32,6 +33,8 @@ doc = r'''
 \definecolor{code-bg-color}{HTML}{fcfcfc} % todo: temp color
 \definecolor{code-border-color}{HTML}{dadce0} % todo: temp color
 
+\definecolor{code-border-color}{HTML}{dadce0} % todo: temp color
+FEF3C7
 
 
 % -------------------- Macros --------------------
@@ -112,9 +115,9 @@ doc = r'''
 
 
 class MyHTMLParser(HTMLParser):
-    def __init__(self, latex_document):
+    def __init__(self):
         super().__init__()
-        self.doc = latex_document
+        self.doc = ''
 
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:", tag, attrs)
@@ -140,8 +143,8 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'section' and 'colorful-block' in attrs['class']:
             colorful_block_class = attrs['class'].split()[-1]
             colorful_block_class = colorful_block_class.capitalize()
-
-                self.doc += "\\" + colorful_block_class + "{"
+            #TODO
+            self.doc += "\\" + colorful_block_class + "{"
 
         elif tag == 'span' and 'colorful-block' in attrs['class']:
             self.doc += r"\textit{"
@@ -174,7 +177,7 @@ class MyHTMLParser(HTMLParser):
 
 
 
-parser = MyHTMLParser(doc)
+parser = MyHTMLParser()
 
 
 study_sheet_example = '''<!-- Text -->
