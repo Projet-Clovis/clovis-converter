@@ -35,22 +35,30 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'p' and 'class' in attrs:
             if 'definition-title' in attrs['class']:
                 self.doc += '<p class="definition-title">'
+                self.stack.append('p')
 
             elif 'h1' in attrs['class']:
                 self.doc += '<h1 class="title">'
+                self.stack.append('h1')
 
             elif 'h2' in attrs['class']:
                 self.doc += '<h2 class="title">'
+                self.stack.append('h2')
 
             elif 'h3' in attrs['class']:
                 self.doc += '<h3 class="title">'
+                self.stack.append('h3')
 
             elif 'h4' in attrs['class']:
                 self.doc += '<h4 class="title">'
+                self.stack.append('h4')
+
+            else:
+                self.stack.append('p')
 
         elif tag == 'p':
             self.doc += '<p class="text">'
-            self.stack.append('text')
+            self.stack.append('p')
 
         elif tag == 'b':
             self.doc += '<b>'
@@ -81,8 +89,11 @@ class MyHTMLParser(HTMLParser):
             self.doc += '</h3>\n'
         elif tag == 'h4':
             self.doc += '</h4>\n'
+
         elif tag == 'p':
-            self.doc += '</p>\n'
+            matching_tag = self.stack.pop()
+            self.doc += f'</{matching_tag}>\n'
+
         elif tag == 'b':
             self.doc += '</b>\n'
         elif tag == 'i':
