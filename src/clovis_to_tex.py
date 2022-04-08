@@ -12,6 +12,7 @@ doc = r'''
 \usepackage{textcomp}%
 \usepackage{lastpage}%
 %
+\usepackage{soul}
 \usepackage{fontawesome5}
 %
 \usepackage{xcolor}
@@ -30,6 +31,14 @@ doc = r'''
 
 
 % -------------------- Macros --------------------
+% highlight function
+\newcommand{\highlight}[2]{%
+    \begingroup
+    \sethlcolor{#1}%
+    \hl{#2}%
+    \endgroup
+}
+
 \mdfdefinestyle{definition-style}{%
   innertopmargin=10px,
   innerbottommargin=10px,
@@ -100,6 +109,9 @@ class MyHTMLParser(HTMLParser):
             colorful_block_class = colorful_block_class.capitalize()
 
                 self.doc += "\\" + colorful_block_class + "{"
+
+        elif tag == 'span' and 'colorful-block' in attrs['class']:
+            self.doc += r"\textit{"
 
 
     def handle_endtag(self, tag):
