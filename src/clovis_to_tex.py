@@ -276,6 +276,22 @@ study_sheet_example = '''<!-- Title : h1 -->
     <p class="definition-title">Some word</p>
     <p class="text">Some definition</p>
 </div>
+
+<!-- Quote -->
+<div class="quote-container">
+    <p class="quote-content">
+        This is a short citation.
+    </p>
+    <p class="quote-author">
+        John Doe
+    </p>
+    <p class="quote-source">
+        The Book Written By Someone
+    </p>
+    <p class="quote-date">
+        1957
+    </p>
+</div>
 '''
 
 ## Main
