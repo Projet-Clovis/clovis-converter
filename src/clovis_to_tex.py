@@ -2,6 +2,14 @@ from bs4 import BeautifulSoup
 from html.parser import HTMLParser
 from common import remove_tags, rename_tags
 
+## CONSTANTS
+COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
+                'danger', 'summary', 'reminder', 'advice', 'remark')
+
+TAB = 4 * " "
+
+
+
 study_sheet_name = "Study Sheet Name"
 author = "Study Sheet Author"
 date = r"\today"
@@ -142,22 +150,16 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'h4':
             self.doc += r"\paragraph{"
 
-        elif tag == 'p' and 'class' in attrs:
-            if 'definition-title' in attrs['class']:
-                self.doc += r'\clovisDefinition{'
-            elif 'text' in attrs['class']:
-                if self.definition_active:
-                    self.doc += '}'
+        elif tag == 'definition-title':
+            self.doc += r"\clovisDefinition{"
+
+        elif tag in COLORFUL_BLOCKS and tag != "definition":
+            self.doc += r"\clovis" + tag.capitalize() + "{"
 
         elif tag == 'b':
             self.doc += r"\textbf{"
         elif tag == 'i':
             self.doc += r"\textit{"
-
-        elif tag == 'div' and 'class' in attrs:
-            if 'cb-container' in attrs['class']:
-                if 'definition' in attrs['class']:
-                    self.definition_active = True
 
         elif tag == 'span' and 'class' in attrs:
             if 'hl-yellow' in attrs['class']:
@@ -185,6 +187,14 @@ class MyHTMLParser(HTMLParser):
 
         elif tag == 'p':
             self.doc += r'\\' + "\n\n"
+
+        elif tag == 'definition-title':
+            self.doc += "}{\n" + TAB
+        elif tag == 'definition':
+            self.doc += "\n}\n\n"
+
+        elif tag in COLORFUL_BLOCKS: #todo: faire "if tag in COLORFUL-BLOCK
+            self.doc += "}\n\n"
 
         elif tag == 'span':
             self.doc += "}"
@@ -245,10 +255,19 @@ study_sheet_example = '''<!-- Title : h1 -->
 ## Main
 soup = BeautifulSoup(study_sheet_example, 'html.parser')
 
-rename_tags(soup, 'definition-title', 'definition-title')
+# Definition
+remove_tags(soup, '.cb-title-container')
+
+rename_tags(soup, '.definition-title', 'definition-title')
+rename_tags(soup, '.definition .text', 'definition-text')
+
+# Colorful-blocks
+for tag in COLORFUL_BLOCKS:
+    rename_tags(soup, f'.{tag} .text', f'{tag}')
 
 parser = MyHTMLParser()
 
 parser.feed(str(soup))
 parser.doc += r"\end{document}" + "\n"
 
+print(parser.doc)
