@@ -29,7 +29,8 @@ doc = r'''
 \definecolor{danger-color}{HTML}{e6505f}
 \definecolor{danger-bg-color}{HTML}{fce5e7}
 
-\definecolor{code-bg-color}{HTML}{f0f0f0} % todo: temp color
+\definecolor{code-bg-color}{HTML}{fcfcfc} % todo: temp color
+\definecolor{code-border-color}{HTML}{dadce0} % todo: temp color
 
 
 
@@ -43,11 +44,34 @@ doc = r'''
 }
 
 
-\newcommand{\inlineCode}[1]{%
+% inlineCode (without border)
+\newcommand{\inlineCodeWithoutBorder}[1]{%
     {\small\tt \highlight{code-bg-color}{#1}}%
 }
 
 
+% inlineCode (with border)
+\usepackage[most]{tcolorbox}
+\tcbset{
+    on line,
+    boxsep=2px,
+    left=0pt,
+    right=0pt,
+    top=0pt,
+    bottom=0pt,
+    boxrule=0.5px,
+    colframe=code-border-color,
+    colback=code-bg-color,
+    highlight math style={enhanced},
+    breakable
+}
+
+\newcommand{\inlineCode}[1]{%
+    \tcbox{{\small\tt #1}}%
+}
+
+
+% colorful-blocks
 \mdfdefinestyle{definition-style}{%
   innertopmargin=10px,
   innerbottommargin=10px,
@@ -69,9 +93,9 @@ doc = r'''
 
 
 % -------------------- Study Sheet --------------------
-\title{Algorithmes d'Optimisation des Graphes}%
-\author{Licence 3}%
-\date{2021 {-} 2022}%
+\title{Study Sheet Name}%
+\author{Study Sheet Author}%
+\date{\today}%
 \normalsize%
 %
 \setcounter{tocdepth}{4}
