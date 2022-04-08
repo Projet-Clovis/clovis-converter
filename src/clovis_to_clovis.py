@@ -66,6 +66,16 @@ class MyHTMLParser(HTMLParser):
             self.doc += '<p class="text">'
             self.stack.append('p')
 
+        elif tag == 'span':
+            if 'class' in attrs:
+                if 'hl-yellow' in attrs['class']:
+                    self.doc += '<span class="hl-yellow">'
+
+                elif 'f-code' in attrs['class']:
+                    self.doc += '<span class="f-code">'
+
+            #self.stack.append('span')
+
         elif tag == 'b':
             self.doc += '<b>'
         elif tag == 'i':
@@ -99,6 +109,9 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'p':
             matching_tag = self.stack.pop()
             self.doc += f'</{matching_tag}>\n'
+
+        elif tag == 'span':
+            self.doc += '</span>'
 
         elif tag == 'b':
             self.doc += '</b>'
