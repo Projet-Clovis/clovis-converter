@@ -89,7 +89,7 @@ doc = r'''
 }
 
 
-% colorful-blocks
+% -------------------- colorful-blocks --------------------
 \mdfdefinestyle{definition-style}{%
   innertopmargin=10px,
   innerbottommargin=10px,
@@ -108,6 +108,32 @@ doc = r'''
     \\ #2
     \end{definition}
 }
+
+
+\newcommand\clovisColorfulBlock[2]{
+    % #1 = danger (name)
+    % #2 = Danger (color)
+    % #3 = danger-bg-color (background color)
+    \mdfdefinestyle{#1-style}{%
+        innertopmargin=10px,
+        innerbottommargin=10px,
+        linecolor=#1-color,
+        backgroundcolor=#1-bg-color,
+        roundcorner=4px
+    }
+    \newmdenv[style=#1-style]{#1}
+
+
+    \expandafter\newcommand\csname clovis#2\endcsname[1]{
+        \begin{#1}
+        {\scriptsize \textcolor{#1-color}{\faIcon{exclamation-triangle} \textbf{DANGER}}}
+        \vspace{3px}
+        \\ ##1
+        \end{#1}
+    }
+}
+
+\clovisColorfulBlock{danger}{Danger}
 
 
 % -------------------- Study Sheet --------------------
