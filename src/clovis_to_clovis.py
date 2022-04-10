@@ -33,25 +33,6 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'h4':
             self.doc += '<h4 class="title">'
 
-        # p with class
-        elif tag == 'p' and 'class' in attrs:
-            if 'definition-title' in attrs['class']:
-                self.doc += '<p class="definition-title">'
-
-            elif attrs['class'] == 'title':
-                self.doc += '<h1 class="title">'
-
-            elif 'subtitle' in attrs['class']:
-                self.doc += '<h2 class="title">'
-
-            elif 'subpart' in attrs['class']:
-                self.doc += '<h3 class="title">'
-            elif 'subhead' in attrs['class']:
-                self.doc += '<h4 class="title">'
-
-            elif 'text' in attrs['class']:
-                self.doc += '<p class="text">'
-
         elif tag == 'p':
             self.doc += '<p class="text">'
 
@@ -71,7 +52,13 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'br':
             self.doc += '<br>'
 
-        elif tag == 'section' and 'colorful-block' in attrs['class']:
+
+        elif tag == 'definition-title':
+            self.doc += '<p class="definition-title">'
+        elif tag == 'definition-text':
+            self.doc += '<p class="text">'
+
+        elif tag == 'colorful-block':
             colorful_block_class = attrs['class'].split()[-1]
             self.doc += f'''<div class="cb-container {colorful_block_class}">
     <div class="cb-title-container">
@@ -104,7 +91,17 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'i':
             self.doc += '</i>'
 
-        elif tag == 'section':
+
+        elif tag == 'quote':
+            self.doc += '</div>\n'
+
+
+        elif tag == 'definition-title':
+            self.doc += '</p>\n'
+        elif tag == 'definition-text':
+            self.doc += '</p>\n'
+
+        elif tag == 'colorful-block':
             self.doc += '</div>\n'
 
 
@@ -125,7 +122,7 @@ study_sheet_example = '''<div id="main-content" class="preview" style="padding-l
             <div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h3 hide-h1-1 hide-h2-1" data-hide="h3-1" style=""><p placeholder="Sous-partie" class="subpart" data-count="a) " contenteditable="false">Some h3</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h4 hide-h1-1 hide-h2-1 hide-h3-1" data-hide="h4-1" style=""><p placeholder="Titre inférieur" class="subhead" data-count="1) " contenteditable="false">Some h4</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some text<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span><i><b></b></i>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="f-code">inline code</span>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block danger"><section class="cb-content"><article class="mini-title mt-danger">Attention</article><p placeholder="Avertissement important" contenteditable="false">Some warning<br></p></section></section></div>        <div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block definition"><section class="cb-content"><article class="mini-title mt-definition">Définition</article><p placeholder="Mot défini" class="definition-title" contenteditable="false">Some word<br></p><p placeholder="Définition" contenteditable="false">Some definition<br></p></section></section></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1"><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><section class="colorful-block quote"><section class="cb-content"><section class="quote-container"><article class="quote-content" placeholder="Citation" contenteditable="false">This is a short citation<br></article></section><section class="optional-button-container ob-quote"><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Auteur" contenteditable="false">John Doe<br></article></section><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Source" contenteditable="false">The Book Written by Him<br></article></section><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Date" contenteditable="false">1857</article></section></section></section></section></div>                </div>'''
 
 
-## Main
+## Pre-processing the study-sheet
 soup = BeautifulSoup(study_sheet_example, 'html.parser')
 
 remove_tags(soup, '.mini-title')
@@ -133,9 +130,25 @@ remove_tags(soup, '.block-edit-button-container')
 remove_tags(soup, '.material-icons')
 
 rename_tags(soup, '.cb-content')
+
+# Headings
+rename_tags(soup, 'p.title', 'h1')
+rename_tags(soup, 'p.subtitle', 'h2')
+rename_tags(soup, 'p.subpart', 'h3')
+rename_tags(soup, 'p.subhead', 'h4')
+
+# Quote / Excerpts
+rename_tags(soup, '.quote', 'quote')
+
+# Definition
 rename_tags(soup, '.definition-title', 'definition-title')
 rename_tags(soup, '.definition p', 'definition-text')
 
+# Colorful blocks
+rename_tags(soup, '.colorful-block', 'colorful-block')
+
+
+## Parser
 parser.feed(str(soup))
 parser.doc += '\n'
 
