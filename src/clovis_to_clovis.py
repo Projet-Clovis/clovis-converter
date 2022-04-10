@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from html.parser import HTMLParser
 from common import remove_tags, rename_tags
 
-REMOVE_ENDING_BR_TAGS = ('h1', 'h2', 'h3', 'h4', 'p')
+REMOVE_ENDING_BR_TAGS = ('h1', 'h2', 'h3', 'h4', 'p', 'article')
 REMOVE_EMPTY_TAGS = ('b', 'i')
 TAGS_LIST = ('h1', 'h2', 'h3', 'h4', 'p', 'b', 'i')
 COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
@@ -63,16 +63,16 @@ class MyHTMLParser(HTMLParser):
             self.doc += '<div class="quote-container">'
 
         elif tag == 'quote-content':
-            self.doc += '</div>\n'
+            self.doc += '<p class="quote-content">'
 
         elif tag == 'quote-author':
-            self.doc += '</div>\n'
+            self.doc += '<p class="quote-author">'
 
         elif tag == 'quote-source':
-            self.doc += '</div>\n'
+            self.doc += '<p class="quote-source">'
 
         elif tag == 'quote-date':
-            self.doc += '</div>\n'
+            self.doc += '<p class="quote-date">'
 
 
         elif tag == 'definition-title':
@@ -124,16 +124,16 @@ class MyHTMLParser(HTMLParser):
             self.doc += '</div>\n'
 
         elif tag == 'quote-content':
-            self.doc += '</div>\n'
+            self.doc += '</p>\n'
 
         elif tag == 'quote-author':
-            self.doc += '</div>\n'
+            self.doc += '</p>\n'
 
         elif tag == 'quote-source':
-            self.doc += '</div>\n'
+            self.doc += '</p>'
 
         elif tag == 'quote-date':
-            self.doc += '</div>\n'
+            self.doc += '</p>\n'
 
 
         elif tag == 'definition-title':
@@ -181,13 +181,17 @@ rename_tags(soup, 'p.subhead', 'h4')
 
 # Quote / Excerpts
 rename_tags(soup, '.quote', 'quote')
+rename_tags(soup, '.quote-content', 'quote-content')
+rename_tags(soup, '.ob-quote .ob-selected-preview:nth-child(1)', 'quote-author')
+rename_tags(soup, '.ob-quote .ob-selected-preview:nth-child(2)', 'quote-source')
+rename_tags(soup, '.ob-quote .ob-selected-preview:nth-child(3)', 'quote-date')
 
 # Definition
 rename_tags(soup, '.definition-title', 'definition-title')
 rename_tags(soup, '.definition p', 'definition-text')
 
 # Colorful blocks
-rename_tags(soup, '.colorful-block', 'colorful-block')
+rename_tags(soup, '.colorful-block:not(.quote)', 'colorful-block')
 
 
 ## Parser
