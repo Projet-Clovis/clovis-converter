@@ -19,7 +19,6 @@ class MyHTMLParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.doc = ''
-        self.stack = []
 
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:", tag, attrs)
@@ -38,34 +37,23 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'p' and 'class' in attrs:
             if 'definition-title' in attrs['class']:
                 self.doc += '<p class="definition-title">'
-                self.stack.append('p')
 
             elif attrs['class'] == 'title':
                 self.doc += '<h1 class="title">'
-                self.stack.append('h1')
 
             elif 'subtitle' in attrs['class']:
                 self.doc += '<h2 class="title">'
-                self.stack.append('h2')
 
             elif 'subpart' in attrs['class']:
                 self.doc += '<h3 class="title">'
-                self.stack.append('h3')
-
             elif 'subhead' in attrs['class']:
                 self.doc += '<h4 class="title">'
-                self.stack.append('h4')
 
             elif 'text' in attrs['class']:
                 self.doc += '<p class="text">'
-                self.stack.append('p')
-
-            else:
-                self.stack.append('p')
 
         elif tag == 'p':
             self.doc += '<p class="text">'
-            self.stack.append('p')
 
         elif tag == 'span':
             if 'class' in attrs:
@@ -74,8 +62,6 @@ class MyHTMLParser(HTMLParser):
 
                 elif 'f-code' in attrs['class']:
                     self.doc += '<span class="f-code">'
-
-            #self.stack.append('span')
 
         elif tag == 'b':
             self.doc += '<b>'
@@ -108,8 +94,7 @@ class MyHTMLParser(HTMLParser):
             self.doc += '</h4>\n'
 
         elif tag == 'p':
-            matching_tag = self.stack.pop()
-            self.doc += f'</{matching_tag}>\n'
+            self.doc += '</p>\n'
 
         elif tag == 'span':
             self.doc += '</span>'
@@ -148,6 +133,8 @@ remove_tags(soup, '.block-edit-button-container')
 remove_tags(soup, '.material-icons')
 
 rename_tags(soup, '.cb-content')
+rename_tags(soup, '.definition-title', 'definition-title')
+rename_tags(soup, '.definition p', 'definition-text')
 
 parser.feed(str(soup))
 parser.doc += '\n'
