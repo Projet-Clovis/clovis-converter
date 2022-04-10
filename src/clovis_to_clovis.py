@@ -53,6 +53,10 @@ class MyHTMLParser(HTMLParser):
             self.doc += '<br>'
 
 
+        elif tag == 'quote':
+            self.doc += '<p class="definition-title">'
+
+
         elif tag == 'definition-title':
             self.doc += '<p class="definition-title">'
         elif tag == 'definition-text':
