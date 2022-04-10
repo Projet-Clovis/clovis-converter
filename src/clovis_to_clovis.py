@@ -26,15 +26,20 @@ class MyHTMLParser(HTMLParser):
 
         if tag == 'h1':
             self.doc += '<h1 class="title">'
+
         elif tag == 'h2':
             self.doc += '<h2 class="title">'
+
         elif tag == 'h3':
             self.doc += '<h3 class="title">'
+
         elif tag == 'h4':
             self.doc += '<h4 class="title">'
 
+
         elif tag == 'p':
             self.doc += '<p class="text">'
+
 
         elif tag == 'span':
             if 'class' in attrs:
@@ -49,18 +54,32 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'i':
             self.doc += '<i>'
 
+
         elif tag == 'br':
             self.doc += '<br>'
 
 
         elif tag == 'quote':
-            self.doc += '<p class="definition-title">'
+            self.doc += '<div class="quote-container">'
+
+        elif tag == 'quote-content':
+            self.doc += '</div>\n'
+
+        elif tag == 'quote-author':
+            self.doc += '</div>\n'
+
+        elif tag == 'quote-source':
+            self.doc += '</div>\n'
+
+        elif tag == 'quote-date':
+            self.doc += '</div>\n'
 
 
         elif tag == 'definition-title':
             self.doc += '<p class="definition-title">'
         elif tag == 'definition-text':
             self.doc += '<p class="text">'
+
 
         elif tag == 'colorful-block':
             colorful_block_class = attrs['class'].split()[-1]
@@ -77,15 +96,20 @@ class MyHTMLParser(HTMLParser):
 
         if tag == 'h1':
             self.doc += '</h1>\n'
+
         elif tag == 'h2':
             self.doc += '</h2>\n'
+
         elif tag == 'h3':
             self.doc += '</h3>\n'
+
         elif tag == 'h4':
             self.doc += '</h4>\n'
 
+
         elif tag == 'p':
             self.doc += '</p>\n'
+
 
         elif tag == 'span':
             self.doc += '</span>'
@@ -99,11 +123,25 @@ class MyHTMLParser(HTMLParser):
         elif tag == 'quote':
             self.doc += '</div>\n'
 
+        elif tag == 'quote-content':
+            self.doc += '</div>\n'
+
+        elif tag == 'quote-author':
+            self.doc += '</div>\n'
+
+        elif tag == 'quote-source':
+            self.doc += '</div>\n'
+
+        elif tag == 'quote-date':
+            self.doc += '</div>\n'
+
 
         elif tag == 'definition-title':
             self.doc += '</p>\n'
+
         elif tag == 'definition-text':
             self.doc += '</p>\n'
+
 
         elif tag == 'colorful-block':
             self.doc += '</div>\n'
