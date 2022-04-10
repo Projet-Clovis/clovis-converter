@@ -5,6 +5,7 @@ And later, may be used to validate study sheet?
 
 from bs4 import BeautifulSoup
 from html.parser import HTMLParser
+from common import remove_tags, rename_tags
 
 REMOVE_ENDING_BR_TAGS = ('h1', 'h2', 'h3', 'h4', 'p')
 REMOVE_EMPTY_TAGS = ('b', 'i')
@@ -66,6 +67,16 @@ class MyHTMLParser(HTMLParser):
             self.doc += '<p class="text">'
             self.stack.append('p')
 
+        elif tag == 'span':
+            if 'class' in attrs:
+                if 'hl-yellow' in attrs['class']:
+                    self.doc += '<span class="hl-yellow">'
+
+                elif 'f-code' in attrs['class']:
+                    self.doc += '<span class="f-code">'
+
+            #self.stack.append('span')
+
         elif tag == 'b':
             self.doc += '<b>'
         elif tag == 'i':
@@ -100,6 +111,9 @@ class MyHTMLParser(HTMLParser):
             matching_tag = self.stack.pop()
             self.doc += f'</{matching_tag}>\n'
 
+        elif tag == 'span':
+            self.doc += '</span>'
+
         elif tag == 'b':
             self.doc += '</b>'
         elif tag == 'i':
@@ -123,32 +137,17 @@ parser = MyHTMLParser()
 study_sheet_example = '''<div id="main-content" class="preview" style="padding-left: 25px;">
 
 
-            <div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h3 hide-h1-1 hide-h2-1" data-hide="h3-1" style=""><p placeholder="Sous-partie" class="subpart" data-count="a) " contenteditable="false">Some h3</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h4 hide-h1-1 hide-h2-1 hide-h3-1" data-hide="h4-1" style=""><p placeholder="Titre inférieur" class="subhead" data-count="1) " contenteditable="false">Some h4</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some text<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span><i><b></b></i>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="f-code">inline code</span>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block danger"><section class="cb-content"><article class="mini-title mt-danger">Attention</article><p placeholder="Avertissement important" contenteditable="false">Some warning<br></p></section></section></div>        <div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block definition"><section class="cb-content"><article class="mini-title mt-definition">Définition</article><p placeholder="Mot défini" class="definition-title" contenteditable="false">Some word<br></p><p placeholder="Définition" contenteditable="false">Some definition<br></p></section></section></div>                </div>'''
-
-
-## Functions
-def remove_tags(soup, tags_class):
-    tags = soup.find_all(class_=tags_class)
-
-    for t in tags:
-        t.decompose() # remove
-
-
-def rename_tags(soup, tags_class, new_name='article'):
-    tags = soup.find_all(class_=tags_class)
-
-    for t in tags:
-        t.name = new_name
+            <div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h3 hide-h1-1 hide-h2-1" data-hide="h3-1" style=""><p placeholder="Sous-partie" class="subpart" data-count="a) " contenteditable="false">Some h3</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h4 hide-h1-1 hide-h2-1 hide-h3-1" data-hide="h4-1" style=""><p placeholder="Titre inférieur" class="subhead" data-count="1) " contenteditable="false">Some h4</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some text<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span><i><b></b></i>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="f-code">inline code</span>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block danger"><section class="cb-content"><article class="mini-title mt-danger">Attention</article><p placeholder="Avertissement important" contenteditable="false">Some warning<br></p></section></section></div>        <div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block definition"><section class="cb-content"><article class="mini-title mt-definition">Définition</article><p placeholder="Mot défini" class="definition-title" contenteditable="false">Some word<br></p><p placeholder="Définition" contenteditable="false">Some definition<br></p></section></section></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1"><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><section class="colorful-block quote"><section class="cb-content"><section class="quote-container"><article class="quote-content" placeholder="Citation" contenteditable="false">This is a short citation<br></article></section><section class="optional-button-container ob-quote"><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Auteur" contenteditable="false">John Doe<br></article></section><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Source" contenteditable="false">The Book Written by Him<br></article></section><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Date" contenteditable="false">1857</article></section></section></section></section></div>                </div>'''
 
 
 ## Main
 soup = BeautifulSoup(study_sheet_example, 'html.parser')
 
-remove_tags(soup, 'mini-title')
-remove_tags(soup, 'block-edit-button-container')
-remove_tags(soup, 'material-icons')
+remove_tags(soup, '.mini-title')
+remove_tags(soup, '.block-edit-button-container')
+remove_tags(soup, '.material-icons')
 
-rename_tags(soup, 'cb-content')
+rename_tags(soup, '.cb-content')
 
 parser.feed(str(soup))
 parser.doc += '\n'
