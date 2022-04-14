@@ -46,6 +46,19 @@ def clovis_to_clovis(clovis_input):
         'h3': '</h3>\n',
         'h4': '</h4>\n',
 
+        'p': '</p>\n',
+
+        'quote': '</div>\n',
+        'quote-content': '</p>\n',
+        'quote-author': '</p>\n',
+        'quote-source': '</p>',
+        'quote-date': '</p>\n',
+
+        'definition-title': '</p>\n',
+        'definition-text': '</p>\n',
+
+        'colorful-block': '</div>\n',
+
         'b': '</b>',
         'i': '</i>',
 
@@ -98,46 +111,6 @@ def clovis_to_clovis(clovis_input):
 
             if tag in TAG_LIST:
                 self.doc += END_TAG[tag]
-
-
-            elif tag == 'p':
-                self.doc += '</p>\n'
-
-
-            elif tag == 'span':
-                self.doc += '</span>'
-
-            elif tag == 'b':
-                self.doc += '</b>'
-            elif tag == 'i':
-                self.doc += '</i>'
-
-
-            elif tag == 'quote':
-                self.doc += '</div>\n'
-
-            elif tag == 'quote-content':
-                self.doc += '</p>\n'
-
-            elif tag == 'quote-author':
-                self.doc += '</p>\n'
-
-            elif tag == 'quote-source':
-                self.doc += '</p>'
-
-            elif tag == 'quote-date':
-                self.doc += '</p>\n'
-
-
-            elif tag == 'definition-title':
-                self.doc += '</p>\n'
-
-            elif tag == 'definition-text':
-                self.doc += '</p>\n'
-
-
-            elif tag == 'colorful-block':
-                self.doc += '</div>\n'
 
 
         def handle_data(self, data):
