@@ -14,7 +14,14 @@ COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
                 'danger', 'summary', 'reminder', 'advice', 'remark')
 CLASS_LIST = ()
 
-TAG_LIST = ()
+TAG_LIST = ('h1', 'h2', 'h3', 'h4',)
+
+START_TAG = {
+    'h1': '<h1 class="title">',
+    'h2': '<h2 class="title">',
+    'h3': '<h3 class="title">',
+    'h4': '<h4 class="title">',
+}
 
 
 class MyHTMLParser(HTMLParser):
@@ -26,17 +33,8 @@ class MyHTMLParser(HTMLParser):
         print("Encountered a start tag:", tag, attrs)
         attrs = dict(attrs)
 
-        if tag == 'h1':
-            self.doc += '<h1 class="title">'
-
-        elif tag == 'h2':
-            self.doc += '<h2 class="title">'
-
-        elif tag == 'h3':
-            self.doc += '<h3 class="title">'
-
-        elif tag == 'h4':
-            self.doc += '<h4 class="title">'
+        if tag in TAG_LIST:
+            self.doc += START_TAG[tag]
 
 
         elif tag == 'p':
