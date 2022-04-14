@@ -87,15 +87,6 @@ def clovis_to_clovis(clovis_input):
                     elif 'f-code' in attrs['class']:
                         self.doc += '<span class="f-code">'
 
-
-            'quote': '<div class="quote-container">',
-            'quote-content': '<p class="quote-content">',
-            'quote-author': '<p class="quote-author">',
-            'quote-source': '<p class="quote-source">',
-            'quote-date': '<p class="quote-date">',
-
-            'definition-title': '<p class="definition-title">',            'definition-text': '<p class="text">',
-
             elif tag == 'colorful-block':
                 colorful_block_class = attrs['class'].split()[-1]
                 self.doc += f'''<div class="cb-container {colorful_block_class}">
