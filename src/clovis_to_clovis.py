@@ -15,13 +15,18 @@ def clovis_to_clovis(clovis_input):
                     'danger', 'summary', 'reminder', 'advice', 'remark')
     CLASS_LIST = ()
 
-    TAG_LIST = ('h1', 'h2', 'h3', 'h4',)
+    TAG_LIST = ('h1', 'h2', 'h3', 'h4', 'b', 'i', 'br')
 
     START_TAG = {
         'h1': '<h1 class="title">',
         'h2': '<h2 class="title">',
         'h3': '<h3 class="title">',
         'h4': '<h4 class="title">',
+
+        'b': '<b>',
+        'i': '<i>',
+
+        'br': '<br>',
     }
 
     END_TAG = {
@@ -29,6 +34,11 @@ def clovis_to_clovis(clovis_input):
         'h2': '</h2>\n',
         'h3': '</h3>\n',
         'h4': '</h4>\n',
+
+        'b': '</b>',
+        'i': '</i>',
+
+        'br': '<br>', # just in case?
     }
 
 
