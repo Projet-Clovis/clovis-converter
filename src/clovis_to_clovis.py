@@ -25,6 +25,15 @@ def clovis_to_clovis(clovis_input):
 
         'p': '<p class="text">',
 
+        'quote': '<div class="quote-container">',
+        'quote-content': '<p class="quote-content">',
+        'quote-author': '<p class="quote-author">',
+        'quote-source': '<p class="quote-source">',
+        'quote-date': '<p class="quote-date">',
+
+        'definition-title': '<p class="definition-title">',
+        'definition-text': '<p class="text">',
+
         'b': '<b>',
         'i': '<i>',
 
@@ -66,27 +75,13 @@ def clovis_to_clovis(clovis_input):
                         self.doc += '<span class="f-code">'
 
 
-            elif tag == 'quote':
-                self.doc += '<div class="quote-container">'
+            'quote': '<div class="quote-container">',
+            'quote-content': '<p class="quote-content">',
+            'quote-author': '<p class="quote-author">',
+            'quote-source': '<p class="quote-source">',
+            'quote-date': '<p class="quote-date">',
 
-            elif tag == 'quote-content':
-                self.doc += '<p class="quote-content">'
-
-            elif tag == 'quote-author':
-                self.doc += '<p class="quote-author">'
-
-            elif tag == 'quote-source':
-                self.doc += '<p class="quote-source">'
-
-            elif tag == 'quote-date':
-                self.doc += '<p class="quote-date">'
-
-
-            elif tag == 'definition-title':
-                self.doc += '<p class="definition-title">'
-            elif tag == 'definition-text':
-                self.doc += '<p class="text">'
-
+            'definition-title': '<p class="definition-title">',            'definition-text': '<p class="text">',
 
             elif tag == 'colorful-block':
                 colorful_block_class = attrs['class'].split()[-1]
