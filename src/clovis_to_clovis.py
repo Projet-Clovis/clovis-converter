@@ -7,6 +7,7 @@ def clovis_to_clovis(clovis_input):
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
     from common import remove_tags, rename_tags
+    import re
 
     REMOVE_ENDING_BR_TAGS = ('h1', 'h2', 'h3', 'h4', 'p', 'article')
     REMOVE_EMPTY_TAGS = ('b', 'i')
@@ -150,8 +151,15 @@ def clovis_to_clovis(clovis_input):
     parser.feed(str(soup))
     parser.doc += '\n'
 
+    print(parser.doc)
+
+
     for tag in REMOVE_ENDING_BR_TAGS:
-        parser.doc = parser.doc.replace(f'<br></{tag}>', f'</{tag}>')
+        br_regex = f'(?P<variable>(<br>)*)</{tag}>'
+        pattern = re.compile(br_regex)
+        parser.doc = re.sub(pattern, f'</{tag}>', parser.doc)
+
+    print(parser.doc)
 
     # remove empty span, b, i, ...
     for i in range(5): # 5 times so it can replace nested empty tags
