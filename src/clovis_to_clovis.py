@@ -14,6 +14,8 @@ COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
                 'danger', 'summary', 'reminder', 'advice', 'remark')
 CLASS_LIST = ()
 
+TAG_LIST = ()
+
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
