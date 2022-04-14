@@ -23,6 +23,8 @@ def clovis_to_clovis(clovis_input):
         'h3': '<h3 class="title">',
         'h4': '<h4 class="title">',
 
+        'p': '<p class="text">',
+
         'b': '<b>',
         'i': '<i>',
 
@@ -55,10 +57,6 @@ def clovis_to_clovis(clovis_input):
                 self.doc += START_TAG[tag]
 
 
-            elif tag == 'p':
-                self.doc += '<p class="text">'
-
-
             elif tag == 'span':
                 if 'class' in attrs:
                     if 'hl-yellow' in attrs['class']:
@@ -66,15 +64,6 @@ def clovis_to_clovis(clovis_input):
 
                     elif 'f-code' in attrs['class']:
                         self.doc += '<span class="f-code">'
-
-            elif tag == 'b':
-                self.doc += '<b>'
-            elif tag == 'i':
-                self.doc += '<i>'
-
-
-            elif tag == 'br':
-                self.doc += '<br>'
 
 
             elif tag == 'quote':
