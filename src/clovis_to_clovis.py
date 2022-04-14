@@ -38,7 +38,7 @@ def clovis_to_clovis(clovis_input):
         'b': '</b>',
         'i': '</i>',
 
-        'br': '<br>', # just in case?
+        'br': '<br>', # just in case of KeyError in wrong input
     }
 
 
