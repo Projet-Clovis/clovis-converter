@@ -11,7 +11,7 @@ def clovis_to_tex(clovis_input):
     COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
                     'danger', 'summary', 'reminder', 'advice', 'remark')
 
-    TAB = 4 * " "
+    TAB = 4 * ' '
 
     TAG_LIST = (
         'h1',
@@ -71,7 +71,7 @@ def clovis_to_tex(clovis_input):
         'h3': '}\n\n',
         'h4': '\\\\}\n\n',
 
-        'p': '',
+        'p': r'\\' + '\n\n',
 
         'quote': '',
         'quote-content': '',
@@ -107,11 +107,11 @@ def clovis_to_tex(clovis_input):
             print("Encountered a start tag:", tag, attrs)
             attrs = dict(attrs)
 
-            if tag in TAG_LIST:
-                self.doc += START_TAG[tag]
-
-            elif tag in COLORFUL_BLOCKS and tag != "definition":
+            if tag in COLORFUL_BLOCKS and tag != 'definition':
                 self.doc += r"\clovis" + tag.capitalize() + "{"
+
+            elif tag in TAG_LIST:
+                self.doc += START_TAG[tag]
 
 
         def handle_endtag(self, tag):
@@ -120,10 +120,7 @@ def clovis_to_tex(clovis_input):
             if tag in TAG_LIST:
                 self.doc += END_TAG[tag]
 
-            elif tag == 'p':
-                self.doc += r'\\' + "\n\n"
-
-            elif tag in COLORFUL_BLOCKS: #todo: faire "if tag in COLORFUL-BLOCK
+            elif tag in COLORFUL_BLOCKS and tag != 'definition':
                 self.doc += "}\n\n"
 
 
@@ -146,18 +143,33 @@ def clovis_to_tex(clovis_input):
     soup = BeautifulSoup(clovis_input, 'html.parser')
 
     # Definition
-    remove_tags(soup, '.cb-title-container')
-
     rename_tags(soup, '.definition-title', 'definition-title')
     rename_tags(soup, '.definition .text', 'definition-text')
 
+    # Quote / Excerpts
+    rename_tags(soup, '.quote', 'quote')
+    rename_tags(soup, '.quote-content', 'quote-content')
+    rename_tags(soup, '.quote-author', 'quote-author')
+    rename_tags(soup, '.quote-source', 'quote-source')
+    rename_tags(soup, '.quote-date', 'quote-date')
+
+    # Definition
+    rename_tags(soup, '.definition-title', 'definition-title')
+    rename_tags(soup, '.definition .text', 'definition-text')
+
+    # Colorful blocks
+    rename_tags(soup, '.colorful-block', 'colorful-block')
+
+    # Inline styles
+    rename_tags(soup, '.hl-yellow', 'hl-yellow')
+    rename_tags(soup, '.f-code', 'f-code')
+
     # Colorful-blocks
     for tag in COLORFUL_BLOCKS:
-        rename_tags(soup, f'.{tag} .text', f'{tag}')
+        rename_tags(soup, f'.{tag}', f'{tag}')
 
     parser = MyHTMLParser()
 
     parser.feed(str(soup))
-    #parser.doc += r"\end{document}" + "\n"
 
     return parser.doc
