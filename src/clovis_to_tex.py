@@ -1,3 +1,6 @@
+"""
+Used to convert Clovis study sheet to LaTeX format.
+"""
 
 def clovis_to_tex(clovis_input):
     from bs4 import BeautifulSoup
