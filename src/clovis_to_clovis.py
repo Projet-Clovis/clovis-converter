@@ -16,29 +16,30 @@ def clovis_to_clovis(clovis_input):
                     'danger', 'summary', 'reminder', 'advice', 'remark')
     CLASS_LIST = ()
 
-    TAG_LIST = ('h1',
-                'h2',
-                'h3',
-                'h4',
+    TAG_LIST = (
+        'h1',
+        'h2',
+        'h3',
+        'h4',
 
-                'p',
+        'p',
 
-                'quote',
-                'quote-content',
-                'quote-author',
-                'quote-source',
-                'quote-date',
+        'quote',
+        'quote-content',
+        'quote-author',
+        'quote-source',
+        'quote-date',
 
-                'definition-title',
-                'definition-text',
+        'definition-title',
+        'definition-text',
 
-                'b',
-                'i',
+        'b',
+        'i',
 
-                'hl-yellow',
-                'f-code',
+        'hl-yellow',
+        'f-code',
 
-                'br',
+        'br',
     )
 
     START_TAG = {
@@ -124,6 +125,8 @@ def clovis_to_clovis(clovis_input):
 
             if tag in TAG_LIST:
                 self.doc += END_TAG[tag]
+            elif tag == 'colorful-block':
+                self.doc += '</div>'
 
 
         def handle_data(self, data):
