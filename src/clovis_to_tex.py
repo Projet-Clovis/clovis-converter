@@ -13,7 +13,31 @@ def clovis_to_tex(clovis_input):
 
     TAB = 4 * " "
 
-    TAG_LIST = ('h1', 'h2', 'h3', 'h4', 'b', 'i', 'br')
+    TAG_LIST = (
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+
+        'p',
+
+        'quote',
+        'quote-content',
+        'quote-author',
+        'quote-source',
+        'quote-date',
+
+        'definition-title',
+        'definition-text',
+
+        'b',
+        'i',
+
+        'hl-yellow',
+        'f-code',
+
+        'br',
+    )
 
     START_TAG = {
         'h1': r'\section{',
@@ -21,8 +45,22 @@ def clovis_to_tex(clovis_input):
         'h3': r'\subsubsection{',
         'h4': r'\paragraph{',
 
+        'p': '',
+
+        'quote': '',
+        'quote-content': '',
+        'quote-author': '',
+        'quote-source': '',
+        'quote-date': '',
+
+        'definition-title': r'\clovisDefinition{',
+        'definition-text': '',
+
         'b': r'\textbf{',
         'i': r'\textit{',
+
+        'hl-yellow': r'\hlYellow{',
+        'f-code': r'\inlineCode{',
 
         'br': r'\\',
     }
@@ -31,10 +69,24 @@ def clovis_to_tex(clovis_input):
         'h1': '}\n\n',
         'h2': '}\n\n',
         'h3': '}\n\n',
-        'h4': '}\n\n',
+        'h4': '\\\\}\n\n',
+
+        'p': '',
+
+        'quote': '',
+        'quote-content': '',
+        'quote-author': '',
+        'quote-source': '',
+        'quote-date': '',
+
+        'definition-title': '}{\n' + TAB,
+        'definition-text': '\n}\n\n',
 
         'b': '}',
         'i': '}',
+
+        'hl-yellow': '}',
+        'f-code': '}',
 
         'br': r'\\', # just in case of KeyError in wrong input
     }
@@ -50,29 +102,16 @@ def clovis_to_tex(clovis_input):
             super().__init__()
             self.doc = ''
 
-            self.definition_active = False
-
 
         def handle_starttag(self, tag, attrs):
             print("Encountered a start tag:", tag, attrs)
             attrs = dict(attrs)
 
-
             if tag in TAG_LIST:
                 self.doc += START_TAG[tag]
 
-
-            elif tag == 'definition-title':
-                self.doc += r"\clovisDefinition{"
-
             elif tag in COLORFUL_BLOCKS and tag != "definition":
                 self.doc += r"\clovis" + tag.capitalize() + "{"
-
-            elif tag == 'span' and 'class' in attrs:
-                if 'hl-yellow' in attrs['class']:
-                    self.doc += r"\hlYellow{"
-                if 'f-code' in attrs['class']:
-                    self.doc += r"\inlineCode{"
 
 
         def handle_endtag(self, tag):
@@ -84,16 +123,8 @@ def clovis_to_tex(clovis_input):
             elif tag == 'p':
                 self.doc += r'\\' + "\n\n"
 
-            elif tag == 'definition-title':
-                self.doc += "}{\n" + TAB
-            elif tag == 'definition':
-                self.doc += "\n}\n\n"
-
             elif tag in COLORFUL_BLOCKS: #todo: faire "if tag in COLORFUL-BLOCK
                 self.doc += "}\n\n"
-
-            elif tag == 'span':
-                self.doc += "}"
 
 
         def handle_data(self, data):
