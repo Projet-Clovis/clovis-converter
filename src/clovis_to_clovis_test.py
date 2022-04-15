@@ -1,4 +1,4 @@
-# test h1
+# test for h1
 test_input = '<div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div>'
 test_output = '<h1 class="title">Some h1</h1>\n'
 result = clovis_to_clovis(test_input)
@@ -6,7 +6,7 @@ result = clovis_to_clovis(test_input)
 assert result == test_output
 
 
-# test h1
+# test for h2
 test_input = '</div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div>'
 test_output = '<h2 class="title">Some h2</h2>\n'
 result = clovis_to_clovis(test_input)
