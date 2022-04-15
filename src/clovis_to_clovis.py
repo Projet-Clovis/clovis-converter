@@ -16,7 +16,30 @@ def clovis_to_clovis(clovis_input):
                     'danger', 'summary', 'reminder', 'advice', 'remark')
     CLASS_LIST = ()
 
-    TAG_LIST = ('h1', 'h2', 'h3', 'h4', 'p', 'b', 'i', 'br')
+    TAG_LIST = ('h1',
+                'h2',
+                'h3',
+                'h4',
+
+                'p',
+
+                'quote',
+                'quote-content',
+                'quote-author',
+                'quote-source',
+                'quote-date',
+
+                'definition-title',
+                'definition-text',
+
+                'b',
+                'i',
+
+                'hl-yellow',
+                'f-code',
+
+                'br',
+    )
 
     START_TAG = {
         'h1': '<h1 class="title">',
@@ -37,6 +60,9 @@ def clovis_to_clovis(clovis_input):
 
         'b': '<b>',
         'i': '<i>',
+
+        'hl-yellow': '<span class="hl-yellow">',
+        'f-code': '<span class="f-code">',
 
         'br': '<br>',
     }
@@ -63,6 +89,9 @@ def clovis_to_clovis(clovis_input):
         'b': '</b>',
         'i': '</i>',
 
+        'hl-yellow': '</span>',
+        'f-code':  '</span>',
+
         'br': '<br>', # just in case of KeyError in wrong input
     }
 
@@ -79,14 +108,6 @@ def clovis_to_clovis(clovis_input):
             if tag in TAG_LIST:
                 self.doc += START_TAG[tag]
 
-
-            elif tag == 'span':
-                if 'class' in attrs:
-                    if 'hl-yellow' in attrs['class']:
-                        self.doc += '<span class="hl-yellow">'
-
-                    elif 'f-code' in attrs['class']:
-                        self.doc += '<span class="f-code">'
 
             elif tag == 'colorful-block':
                 colorful_block_class = attrs['class'].split()[-1]
@@ -146,22 +167,22 @@ def clovis_to_clovis(clovis_input):
     # Colorful blocks
     rename_tags(soup, '.colorful-block:not(.quote)', 'colorful-block')
 
+    # Inline styles
+    rename_tags(soup, '.hl-yellow', 'hl-yellow')
+    rename_tags(soup, '.f-code', 'f-code')
+
 
     ## Parser
     parser.feed(str(soup))
-    parser.doc += '\n'
-
-    print(parser.doc)
-
 
     for tag in REMOVE_ENDING_BR_TAGS:
         br_regex = f'(?P<variable>(<br>)*)</{tag}>'
         pattern = re.compile(br_regex)
         parser.doc = re.sub(pattern, f'</{tag}>', parser.doc)
 
-    print(parser.doc)
-
     # remove empty span, b, i, ...
+    #todo: another way of removing (smarter): checking if "text" content is empty
+        #todo: like you would do in jQuery?
     for i in range(5): # 5 times so it can replace nested empty tags
         for tag in REMOVE_EMPTY_TAGS:
             parser.doc = parser.doc.replace(f'<{tag}></{tag}>', '')
