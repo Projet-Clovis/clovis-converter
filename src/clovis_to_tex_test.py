@@ -4,3 +4,18 @@ test_output = '\\section{Some h1 title}\n\n'
 result = clovis_to_tex(test_input)
 
 assert result == test_output
+
+
+# test definition
+test_input = '''<div class="cb-container definition">
+    <div class="cb-title-container">
+        <span class="cb-title-icon"></span>
+        <span class="cb-title"></span>
+    </div>
+    <p class="definition-title">Some word</p>
+    <p class="text">Some definition</p>
+</div>'''
+test_output = '\\clovisDefinition{Some word}{\n    Some definition\n}\n\n'
+result = clovis_to_tex(test_input)
+
+assert result == test_output
