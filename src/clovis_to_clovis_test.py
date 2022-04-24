@@ -46,4 +46,15 @@ expected_output = '''<h1 class="title">Some h1</h1>
 
 result = clovis_to_clovis(test_input)
 
+#assert result == expected_output
+
+
+
+test_input = '''<div class="container toggle-h1" data-hide="h1-1"><div class="code-container"><div placeholder="Entrez ou copiez du code ici" class="code-code" style="display: none;" contenteditable="false">// nom de classe = nom du fichier<br>class HelloWorld {<br>    &nbsp;&nbsp;&nbsp; public static void main(String[] args) {<br>        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("Hello world");<br>    &nbsp;&nbsp;&nbsp; }<br>}</div><div class="code-render hljs cs" light="true" language="cs"><div class="code-line"><span class="hljs-comment">// nom de classe = nom du fichier</span></div><div class="code-line"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloWorld</span> {</div><div class="code-line">    &nbsp;&nbsp;&nbsp; <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> {</div><div class="code-line">        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">"Hello world"</span>);</div><div class="code-line">    &nbsp;&nbsp;&nbsp; }</div><div class="code-line">}</div><div class="code-button-container"><div class="code-button code-size"><div class="code-button-icon"><i class="material-icons">format_size</i></div><div>taille</div></div><div class="code-button code-theme"><div class="code-button-icon"><i class="material-icons"></i></div><div>thème</div></div><div class="code-button code-copy"><div class="code-button-icon"><i class="material-icons">content_copy</i></div><div>copier</div></div></div></div></div></div>'''
+
+expected_output = '''
+'''
+
+result = clovis_to_clovis(test_input)
+
 assert result == expected_output
