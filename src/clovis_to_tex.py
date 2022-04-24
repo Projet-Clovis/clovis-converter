@@ -88,7 +88,7 @@ def clovis_to_tex(clovis_input):
         'hl-yellow': '}',
         'f-code': '}',
 
-        'br': r'\\', # just in case of KeyError in wrong input
+        'br': '', # just in case of KeyError in wrong input
     }
 
 
