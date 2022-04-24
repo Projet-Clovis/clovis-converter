@@ -93,7 +93,7 @@ def clovis_to_clovis(clovis_input):
         'hl-yellow': '</span>',
         'f-code':  '</span>',
 
-        'br': '<br>', # just in case of KeyError in wrong input
+        'br': '', # just in case of KeyError in wrong input
     }
 
 
@@ -173,6 +173,9 @@ def clovis_to_clovis(clovis_input):
     # Inline styles
     rename_tags(soup, '.hl-yellow', 'hl-yellow')
     rename_tags(soup, '.f-code', 'f-code')
+
+    # Code
+    remove_tags(soup, '.code-render')
 
 
     ## Parser
