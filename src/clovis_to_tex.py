@@ -148,7 +148,11 @@ def clovis_to_tex(clovis_input):
     study_sheet_example.pop()
     study_sheet_example = ''.join(study_sheet_example)
 
-    ## Main
+    ## Pre-processing the study-sheet
+    clovis_input = clovis_input.replace('\t', '\\t')
+    clovis_input = clovis_input.replace('\n', '\\n')
+    clovis_input = clovis_input.replace('\r', '\\r')
+
     soup = BeautifulSoup(clovis_input, 'html.parser')
 
     # Definition
@@ -177,8 +181,14 @@ def clovis_to_tex(clovis_input):
     for tag in COLORFUL_BLOCKS:
         rename_tags(soup, f'.{tag}', f'{tag}')
 
-    parser = MyHTMLParser()
+    # Special characters
+    soup_text = str(soup)
+    #soup_text = soup_text.replace('\t', '\\t')
+    #soup_text = soup_text.replace('\n', '\\n')
 
-    parser.feed(str(soup))
+
+    ## Parser
+    parser = MyHTMLParser()
+    parser.feed(soup_text)
 
     return parser.doc
