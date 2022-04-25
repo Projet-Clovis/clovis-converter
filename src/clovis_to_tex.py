@@ -37,6 +37,9 @@ def clovis_to_tex(clovis_input):
         'f-code',
 
         'br',
+
+        'katex-code',
+        'katex-inline-code',
     )
 
     START_TAG = {
@@ -63,6 +66,9 @@ def clovis_to_tex(clovis_input):
         'f-code': r'\inlineCode{',
 
         'br': r'\\',
+
+        'katex-code': r'\[',
+        'katex-inline-code': '',
     }
 
     END_TAG = {
@@ -89,6 +95,9 @@ def clovis_to_tex(clovis_input):
         'f-code': '}',
 
         'br': '', # just in case of KeyError in wrong input
+
+        'katex-code': r'\]',
+        'katex-inline-code': r'\\',
     }
 
 
