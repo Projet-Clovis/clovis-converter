@@ -145,12 +145,12 @@ def clovis_to_clovis(clovis_input):
                 self.doc += data
 
 
-
-    parser = MyHTMLParser()
-
-
-
     ## Pre-processing the study-sheet
+    # Special characters
+    clovis_input = clovis_input.replace('\t', '\\t')
+    clovis_input = clovis_input.replace('\n', '\\n')
+    clovis_input = clovis_input.replace('\r', '\\r')
+
     soup = BeautifulSoup(clovis_input, 'html.parser')
 
     remove_tags(soup, '.mini-title')
@@ -193,9 +193,13 @@ def clovis_to_clovis(clovis_input):
     rename_tags(soup, '.katex-code', 'katex-code')
     rename_tags(soup, '.katex-inline-code', 'katex-inline-code')
 
+    # Special characters
+    soup_text = str(soup) # todo  ?
+
 
     ## Parser
-    parser.feed(str(soup))
+    parser = MyHTMLParser()
+    parser.feed(soup_text)
 
     for tag in REMOVE_ENDING_BR_TAGS:
         br_regex = f'(?P<variable>(<br>)*)</{tag}>'
