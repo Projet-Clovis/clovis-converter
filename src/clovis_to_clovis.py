@@ -40,6 +40,9 @@ def clovis_to_clovis(clovis_input):
         'f-code',
 
         'br',
+
+        'katex-code',
+        'katex-inline-code',
     )
 
     START_TAG = {
@@ -66,6 +69,9 @@ def clovis_to_clovis(clovis_input):
         'f-code': '<span class="f-code">',
 
         'br': '<br>',
+
+        'katex-code': '<div class="katex-container"><p class="katex-code">',
+        'katex-inline-code': '<div class="katex-container"><p class="katex-inline-code">',
     }
 
     END_TAG = {
@@ -94,6 +100,9 @@ def clovis_to_clovis(clovis_input):
         'f-code':  '</span>',
 
         'br': '', # just in case of KeyError in wrong input
+
+        'katex-code': '</p></div>\n',
+        'katex-inline-code': '</p></div>\n',
     }
 
 
@@ -176,6 +185,13 @@ def clovis_to_clovis(clovis_input):
 
     # Code
     remove_tags(soup, '.code-render')
+
+    # Katex
+    remove_tags(soup, '.katex-render')
+    remove_tags(soup, '.katex-inline-render')
+
+    rename_tags(soup, '.katex-code', 'katex-code')
+    rename_tags(soup, '.katex-inline-code', 'katex-inline-code')
 
 
     ## Parser
