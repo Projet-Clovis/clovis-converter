@@ -27,6 +27,8 @@ def clovis_to_tex(clovis_input):
         'quote-source',
         'quote-date',
 
+        'cb-text',
+
         'definition-title',
         'definition-text',
 
@@ -56,6 +58,8 @@ def clovis_to_tex(clovis_input):
         'quote-source': '',
         'quote-date': '',
 
+        'cb-text': '',
+
         'definition-title': r'\clovisDefinition{',
         'definition-text': '',
 
@@ -84,6 +88,8 @@ def clovis_to_tex(clovis_input):
         'quote-author': '',
         'quote-source': '',
         'quote-date': '',
+
+        'cb-text': '',
 
         'definition-title': '}{\n' + TAB,
         'definition-text': '\n}\n\n',
@@ -172,6 +178,7 @@ def clovis_to_tex(clovis_input):
 
     # Colorful blocks
     rename_tags(soup, '.colorful-block', 'colorful-block')
+    rename_tags(soup, '.colorful-block .text', 'cb-text')
 
     # Inline styles
     rename_tags(soup, '.hl-yellow', 'hl-yellow')
