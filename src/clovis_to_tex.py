@@ -172,13 +172,12 @@ def clovis_to_tex(clovis_input):
     rename_tags(soup, '.quote-source', 'quote-source')
     rename_tags(soup, '.quote-date', 'quote-date')
 
+    # Colorful blocks
+    rename_tags(soup, '.cb-container .text', 'cb-text')
+
     # Definition
     rename_tags(soup, '.definition-title', 'definition-title')
     rename_tags(soup, '.definition .text', 'definition-text')
-
-    # Colorful blocks
-    rename_tags(soup, '.colorful-block', 'colorful-block')
-    rename_tags(soup, '.colorful-block .text', 'cb-text')
 
     # Inline styles
     rename_tags(soup, '.hl-yellow', 'hl-yellow')
