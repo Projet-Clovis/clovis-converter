@@ -16,7 +16,7 @@ assert result == expected_output
 
 # test for colorful-block danger
 test_input = '''<div class="cb-container danger"><div class="cb-title-container"><span class="cb-title-icon"></span><span class="cb-title"></span></div><p class="text">Some warning</p></div>'''
-expected_output = '\\clovisDanger{Some warning\\\\\n\n}\n\n'
+expected_output = '\\clovisDanger{Some warning}\n\n'
 result = clovis_to_tex(test_input)
 
 assert result == expected_output
