@@ -1,9 +1,5 @@
 from html.parser import HTMLParser
 
-study_sheet_name = "Algorithmes d'Optimisation des Graphes"
-author = "Licence 3"
-date = "2021 - 2022"
-
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
