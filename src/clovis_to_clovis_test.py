@@ -3,7 +3,6 @@ def test(test_input, expected_output):
     assert result == expected_output
 
 
-# test for h1
 def h1_test():
     test_input = '<div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div>'
     expected_output = '<h1 class="title">Some h1</h1>\n'
@@ -11,7 +10,6 @@ def h1_test():
     test(test_input, expected_output)
 
 
-# test for h2
 def h2_test():
     test_input = '</div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div>'
     expected_output = '<h2 class="title">Some h2</h2>\n'
