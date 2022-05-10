@@ -3,6 +3,7 @@ Used to convert old Clovis study sheet to the new format.
 And later, may be used to validate study sheet?
 """
 
+
 def clovis_to_clovis(clovis_input):
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
@@ -104,7 +105,6 @@ def clovis_to_clovis(clovis_input):
         'katex-code': '</p></div>\n',
         'katex-inline-code': '</p></div>\n',
     }
-
 
     class MyHTMLParser(HTMLParser):
         def __init__(self):
