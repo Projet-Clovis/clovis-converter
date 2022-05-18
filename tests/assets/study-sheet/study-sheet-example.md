@@ -1,15 +1,17 @@
 ```html
 <!-- Title : h1 -->
-<h1 class="title">Some h1 title</h1>
+<h1-title>Some h1 title</h1-title>
+<!-- alternative : -->
+<c-h1>Some h1 title</c-h1>
 
 <!-- Title : h2 -->
-<h2 class="title">Some h2 title</h2>
+<h2-title>Some h2 title</h2-title>
 
 <!-- Title : h3 -->
-<h3 class="title">Some h3 title</h3>
+<h3-title>Some h3 title</h3-title>
 
 <!-- Title : h4 -->
-<h4 class="title">Some h4 title</h4>
+<h4-title>Some h4 title</h4-title>
 
 <!-- Text -->
 <p class="text">Some text.</p>
@@ -24,11 +26,7 @@
 <p class="text">Some <span class="f-code">inline code</span>.</p>
 
 <!-- Colorful block : danger -->
-<div class="cb-container danger">
-    <div class="cb-title-container">
-        <span class="cb-title-icon"></span>
-        <span class="cb-title"></span>
-    </div>
+<cb-container danger>
     <p class="text">Some warning</p>
 </div>
 
