@@ -1,7 +1,7 @@
 from src.clovis_to_tex import clovis_to_tex
 
 
-def test(test_input, expected_output):
+def test(test_input: str, expected_output: str) -> None:
     result = clovis_to_tex(test_input)
     assert result == expected_output
 

@@ -4,7 +4,7 @@ And later, may be used to validate study sheet?
 """
 
 
-def clovis_to_clovis(clovis_input):
+def clovis_to_clovis(clovis_input: str) -> str:
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
     from common import remove_tags, rename_tags
@@ -214,4 +214,3 @@ def clovis_to_clovis(clovis_input):
             parser.doc = parser.doc.replace(f'<{tag}></{tag}>', '')
 
     return parser.doc
-
