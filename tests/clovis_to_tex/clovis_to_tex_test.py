@@ -1,7 +1,7 @@
 from src.clovis_to_tex import clovis_to_tex
 
 
-def test(input_location: str, output_location: str) -> None:
+def check_conversion(input_location: str, output_location: str) -> None:
     with open(input_location) as file:
         content: str = file.read()
 
@@ -14,14 +14,14 @@ def test(input_location: str, output_location: str) -> None:
 
 
 def h1_test() -> None:
-    test(
+    check_conversion(
         "../assets/study-sheet/block/core/h1.html",
         "../assets/study-sheet/block/core/h1.tex",
     )
 
 
 def definition_test() -> None:
-    test(
+    check_conversion(
         "../assets/study-sheet/block/core/definition.html",
         "../assets/study-sheet/block/core/definition.tex",
     )
@@ -29,21 +29,21 @@ def definition_test() -> None:
 
 def colorful_block_test() -> None:
     # test for colorful-block danger
-    test(
+    check_conversion(
         "../assets/study-sheet/block/core/colorful-block.html",
         "../assets/study-sheet/block/core/colorful-block.tex",
     )
 
 
 def katex_code_test() -> None:
-    test(
+    check_conversion(
         "../assets/study-sheet/block/core/katex-code.html",
         "../assets/study-sheet/block/core/katex-code.tex",
     )
 
 
 def katex_inline_code_test() -> None:
-    test(
+    check_conversion(
         "../assets/study-sheet/block/core/katex-inline-code.html",
         "../assets/study-sheet/block/core/katex-inline-code.tex",
     )
