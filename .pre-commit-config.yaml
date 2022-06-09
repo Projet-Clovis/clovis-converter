@@ -14,5 +14,5 @@ repos:
       rev: v0.961
       hooks:
           - id: mypy
-            args: [--strict --namespace-packages=True]
+            args: [--strict, --namespace-packages=True]
             additional_dependencies: [types-beautifulsoup4]
