@@ -2,6 +2,7 @@
 Used to convert old Clovis study sheet to the new format.
 And later, may be used to validate study sheet?
 """
+from typing import Final, Pattern
 
 
 def clovis_to_clovis(clovis_input: str) -> str:
@@ -10,8 +11,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
     from common import remove_tags, rename_tags
     import re
 
-    REMOVE_ENDING_BR_TAGS = ("h1", "h2", "h3", "h4", "p", "article")
-    REMOVE_EMPTY_TAGS = ("b", "i")
+    REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
+    REMOVE_EMPTY_TAGS: Final = ("b", "i")
     # COLORFUL_BLOCKS = (
     #     "definition",
     #     "excerpt",
@@ -25,7 +26,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
     #     "remark",
     # )
 
-    TAG_LIST = (
+    TAG_LIST: Final = (
         "h1",
         "h2",
         "h3",
@@ -47,7 +48,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "katex-inline-code",
     )
 
-    START_TAG = {
+    START_TAG: Final = {
         "h1": '<h1 class="title">',
         "h2": '<h2 class="title">',
         "h3": '<h3 class="title">',
@@ -70,7 +71,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         'class="katex-inline-code">',
     }
 
-    END_TAG = {
+    END_TAG: Final = {
         "h1": "</h1>\n",
         "h2": "</h2>\n",
         "h3": "</h3>\n",
@@ -94,27 +95,19 @@ def clovis_to_clovis(clovis_input: str) -> str:
     }
 
     class MyHTMLParser(HTMLParser):
-        def __init__(self):
+        def __init__(self) -> None:
             super().__init__()
             self.doc = ""
 
-        def handle_starttag(self, tag, attrs):
+        def handle_starttag(
+            self, tag: str, attrs: list[tuple[str, str | None]]
+        ) -> None:
             print("Encountered a start tag:", tag, attrs)
-            attrs = dict(attrs)
 
             if tag in TAG_LIST:
                 self.doc += START_TAG[tag]
 
-            elif tag == "colorful-block":
-                colorful_block_class = attrs["class"].split()[-1]
-                self.doc += f"""<div class="cb-container {colorful_block_class}">
-        <div class="cb-title-container">
-            <span class="cb-title-icon"></span>
-            <span class="cb-title"></span>
-        </div>
-    """
-
-        def handle_endtag(self, tag):
+        def handle_endtag(self, tag: str) -> None:
             print("Encountered an end tag :", tag)
 
             if tag in TAG_LIST:
@@ -122,7 +115,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
             elif tag == "colorful-block":
                 self.doc += "</div>"
 
-        def handle_data(self, data):
+        def handle_data(self, data: str) -> None:
             print("Encountered some data  :", repr(data))
 
             if data.strip() != "":
@@ -177,15 +170,15 @@ def clovis_to_clovis(clovis_input: str) -> str:
     rename_tags(soup, ".katex-inline-code", "katex-inline-code")
 
     # Special characters
-    soup_text = str(soup)  # todo  ?
+    soup_text: str = str(soup)  # todo  ?
 
     # Parser
-    parser = MyHTMLParser()
+    parser: MyHTMLParser = MyHTMLParser()
     parser.feed(soup_text)
 
     for tag in REMOVE_ENDING_BR_TAGS:
-        br_regex = f"(?P<variable>(<br>)*)</{tag}>"
-        pattern = re.compile(br_regex)
+        br_regex: str = f"(?P<variable>(<br>)*)</{tag}>"
+        pattern: Pattern[str] = re.compile(br_regex)
         parser.doc = re.sub(pattern, f"</{tag}>", parser.doc)
 
     # remove empty span, b, i, ...
