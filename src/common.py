@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup, ResultSet  # type: ignore
+from bs4 import BeautifulSoup, ResultSet, Tag
 
 
 def remove_tags(soup: BeautifulSoup, selector: str) -> None:
@@ -9,7 +9,7 @@ def remove_tags(soup: BeautifulSoup, selector: str) -> None:
 
 
 def rename_tags(soup: BeautifulSoup, selector: str, new_name: str = "article") -> None:
-    tags: ResultSet = soup.select(selector)
+    tags: ResultSet[Tag] = soup.select(selector)
 
     for t in tags:
         t.name = new_name
