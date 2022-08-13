@@ -1,50 +1,45 @@
 ```html
 <!-- Title : h1 -->
-<h1-title>Some h1 title</h1-title>
-<!-- alternative : -->
-<c-h1>Some h1 title</c-h1>
+<H1>Some h1 title</H1>
 
 <!-- Title : h2 -->
-<h2-title>Some h2 title</h2-title>
+<H2>Some h2 title</H2>
 
 <!-- Title : h3 -->
-<h3-title>Some h3 title</h3-title>
+<H3>Some h3 title</H3>
 
 <!-- Title : h4 -->
-<h4-title>Some h4 title</h4-title>
+<H4>Some h4 title</H4>
 
 <!-- Text -->
-<p class="text">Some text.</p>
+<Text>Some text.</Text>
 
 <!-- Formatted text -->
-<p class="text">Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</p>
+<Text>Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</Text>
 
 <!-- Formatted text : even more -->
-<p class="text">Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span>.</p>
+<Text>Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span>.</Text>
 
 <!-- Inline code -->
-<p class="text">Some <span class="f-code">inline code</span>.</p>
+<Text>Some <span class="f-code">inline code</span>.</Text>
 
 <!-- Colorful block : danger -->
-<cb-container danger>
-    <p class="text">Some warning</p>
-</div>
+<ColorfulBlock type="danger">
+    <ColorfulBlockText>Some warning</ColorfulBlockText>
+</ColorfulBlock>
 
 <!-- Colorful block : definition -->
-<div class="cb-container definition">
-    <div class="cb-title-container">
-        <span class="cb-title-icon"></span>
-        <span class="cb-title"></span>
-    </div>
-    <p class="definition-title">Some word</p>
-    <p class="text">Some definition</p>
-</div>
+<Definition>
+    <DefinitionTitle>Some word</DefinitionTitle>
+    <DefinitionText>Some definition</DefinitionText>
+</Definition>
 
 <!-- Quote -->
-<div class="quote-container">
-    <p class="quote-content">This is a short citation.</p>
-    <p class="quote-author">John Doe</p>
-    <p class="quote-source">The Book Written By Someone</p>
-    <p class="quote-date">1957</p>
-</div>
+<Quote>
+    <QuoteContent>This is a short citation.</QuoteContent>
+    <QuoteAuthor>John Doe</QuoteAuthor>
+    <QuoteSource>The Book Written By Someone</QuoteSource>
+    <QuoteDate>1957</QuoteDate>
+</Quote>
+
 ```
