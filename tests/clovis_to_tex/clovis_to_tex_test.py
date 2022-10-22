@@ -19,7 +19,7 @@ def _check_conversion(input_location: str, output_location: str) -> None:
     assert result == expected_output
 
 
-def check_conversion(block_name) -> None:
+def check_conversion(block_name: str) -> None:
     _check_conversion(
         f"tests/assets/study-sheet/block/core/{block_name}.html",
         f"tests/assets/study-sheet/block/core/{block_name}.tex",
