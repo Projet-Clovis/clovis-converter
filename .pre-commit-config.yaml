@@ -10,9 +10,9 @@ repos:
       hooks:
           - id: flake8
 
-    - repo: https://github.com/pre-commit/mirrors-mypy
-      rev: v0.961
-      hooks:
-          - id: mypy
-            args: [--strict, --namespace-packages]
-            additional_dependencies: [types-beautifulsoup4]
+#    - repo: https://github.com/pre-commit/mirrors-mypy
+#      rev: v0.961
+#      hooks:
+#          - id: mypy
+#            args: [--strict, --namespace-packages]
+#            additional_dependencies: [types-beautifulsoup4]
