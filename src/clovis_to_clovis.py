@@ -59,7 +59,11 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "quote-author": '<p class="quote-author">',
         "quote-source": '<p class="quote-source">',
         "quote-date": '<p class="quote-date">',
-        "definition-title": '<p class="definition-title">',
+        "definition-title": '<div class="cb-container definition">'
+        '<div class="cb-title-container">'
+        '<span class="cb-title-icon"></span>'
+        '<span class="cb-title"></span></div>'
+        '<p class="definition-title">',
         "definition-text": '<p class="text">',
         "b": "<b>",
         "i": "<i>",
