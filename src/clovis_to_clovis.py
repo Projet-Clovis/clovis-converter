@@ -25,7 +25,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "remark",
     )
 
-    def get_cb_start(cb):
+    def get_cb_start(cb: str) -> str:
         return f'<div class="cb-container {cb}">'
 
     CB_START_DICT: Final = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
