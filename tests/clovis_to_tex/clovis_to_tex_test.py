@@ -8,7 +8,7 @@ def check_conversion(input_location: str, output_location: str) -> None:
     with open(output_location) as file:
         expected_output: str = file.read()
 
-    result: str = clovis_to_tex(content)
+    result = clovis_to_tex(content)
 
     assert result == expected_output
 
