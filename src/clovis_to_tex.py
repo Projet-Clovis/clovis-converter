@@ -72,19 +72,19 @@ def clovis_to_tex(clovis_input: str) -> str:
     }
 
     END_TAG: Final = {
-        "h1": "}\n\n",
-        "h2": "}\n\n",
-        "h3": "}\n\n",
-        "h4": "\\\\}\n\n",
-        "p": r"\\" + "\n\n",
+        "h1": "}",
+        "h2": "}",
+        "h3": "}",
+        "h4": "\\\\}",
+        "p": r"\\" + "",
         "quote": "",
         "quote-content": "",
         "quote-author": "",
         "quote-source": "",
         "quote-date": "",
         "cb-text": "",
-        "definition-title": "}{\n" + TAB,
-        "definition-text": "\n}\n\n",
+        "definition-title": "}{" + TAB,
+        "definition-text": "}",
         "b": "}",
         "i": "}",
         "hl-yellow": "}",
@@ -117,7 +117,7 @@ def clovis_to_tex(clovis_input: str) -> str:
                 self.doc += END_TAG[tag]
 
             elif tag in COLORFUL_BLOCKS and tag != "definition":
-                self.doc += "}\n\n"
+                self.doc += "}"
 
         def handle_data(self, data: str) -> None:
             print("Encountered some data  :", repr(data))
@@ -127,7 +127,7 @@ def clovis_to_tex(clovis_input: str) -> str:
 
     # Pre-processing the study-sheet
     clovis_input = clovis_input.replace("\t", "\\t")
-    clovis_input = clovis_input.replace("\n", "\\n")
+    # clovis_input = clovis_input.replace("\n", "\\n")
     clovis_input = clovis_input.replace("\r", "\\r")
 
     soup = BeautifulSoup(clovis_input, "html.parser")
