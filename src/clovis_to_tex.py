@@ -23,8 +23,6 @@ def clovis_to_tex(clovis_input: str) -> str:
         "remark",
     )
 
-    TAB: Final = 4 * " "
-
     TAG_LIST = (
         "h1",
         "h2",
@@ -83,7 +81,7 @@ def clovis_to_tex(clovis_input: str) -> str:
         "quote-source": "",
         "quote-date": "",
         "cb-text": "",
-        "definition-title": "}{" + TAB,
+        "definition-title": "}{",
         "definition-text": "}",
         "b": "}",
         "i": "}",
