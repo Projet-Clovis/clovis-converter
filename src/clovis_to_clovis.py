@@ -72,26 +72,26 @@ def clovis_to_clovis(clovis_input: str) -> str:
     }
 
     END_TAG: Final = {
-        "h1": "</h1>\n",
-        "h2": "</h2>\n",
-        "h3": "</h3>\n",
-        "h4": "</h4>\n",
-        "p": "</p>\n",
-        "quote": "</div>\n",
-        "quote-content": "</p>\n",
-        "quote-author": "</p>\n",
+        "h1": "</h1>",
+        "h2": "</h2>",
+        "h3": "</h3>",
+        "h4": "</h4>",
+        "p": "</p>",
+        "quote": "</div>",
+        "quote-content": "</p>",
+        "quote-author": "</p>",
         "quote-source": "</p>",
-        "quote-date": "</p>\n",
-        "definition-title": "</p>\n",
-        "definition-text": "</p>\n",
-        "colorful-block": "</div>\n",
+        "quote-date": "</p>",
+        "definition-title": "</p>",
+        "definition-text": "</p>",
+        "colorful-block": "</div>",
         "b": "</b>",
         "i": "</i>",
         "hl-yellow": "</span>",
         "f-code": "</span>",
         "br": "",  # just in case of KeyError in wrong input
-        "katex-code": "</p></div>\n",
-        "katex-inline-code": "</p></div>\n",
+        "katex-code": "</p></div>",
+        "katex-inline-code": "</p></div>",
     }
 
     class MyHTMLParser(HTMLParser):
@@ -124,7 +124,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
     # Pre-processing the study-sheet
     # Special characters
     clovis_input = clovis_input.replace("\t", "\\t")
-    clovis_input = clovis_input.replace("\n", "\\n")
+    # clovis_input = clovis_input.replace("\n", "\\n")
     clovis_input = clovis_input.replace("\r", "\\r")
 
     soup = BeautifulSoup(clovis_input, "html.parser")
