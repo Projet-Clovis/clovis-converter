@@ -13,18 +13,23 @@ def clovis_to_clovis(clovis_input: str) -> str:
 
     REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
     REMOVE_EMPTY_TAGS: Final = ("b", "i")
-    # COLORFUL_BLOCKS = (
-    #     "definition",
-    #     "excerpt",
-    #     "quote",
-    #     "example",
-    #     "byheart",
-    #     "danger",
-    #     "summary",
-    #     "reminder",
-    #     "advice",
-    #     "remark",
-    # )
+    COLORFUL_BLOCKS = (
+        "excerpt",
+        "quote",
+        "example",
+        "byheart",
+        "danger",
+        "summary",
+        "reminder",
+        "advice",
+        "remark",
+    )
+
+    def get_cb_start(cb):
+        return f'<div class="cb-container {cb}">'
+
+    CB_START_DICT: Final = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
+    CB_END_DICT: Final = {cb: "</div>" for cb in COLORFUL_BLOCKS}
 
     TAG_LIST: Final = (
         "h1",
@@ -46,6 +51,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "br",
         "katex-code",
         "katex-inline-code",
+        *COLORFUL_BLOCKS,
     )
 
     START_TAG: Final = {
@@ -60,9 +66,6 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "quote-source": '<p class="quote-source">',
         "quote-date": '<p class="quote-date">',
         "definition-title": '<div class="cb-container definition">'
-        '<div class="cb-title-container">'
-        '<span class="cb-title-icon"></span>'
-        '<span class="cb-title"></span></div>'
         '<p class="definition-title">',
         "definition-text": '<p class="text">',
         "b": "<b>",
@@ -73,6 +76,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "katex-code": '<div class="katex-container"><p class="katex-code">',
         "katex-inline-code": '<div class="katex-container"><p '
         'class="katex-inline-code">',
+        **CB_START_DICT,
     }
 
     END_TAG: Final = {
@@ -87,7 +91,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "quote-source": "</p>",
         "quote-date": "</p>",
         "definition-title": "</p>",
-        "definition-text": "</p>",
+        "definition-text": "</p></div>",
         "colorful-block": "</div>",
         "b": "</b>",
         "i": "</i>",
@@ -96,6 +100,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "br": "",  # just in case of KeyError in wrong input
         "katex-code": "</p></div>",
         "katex-inline-code": "</p></div>",
+        **CB_END_DICT,
     }
 
     class MyHTMLParser(HTMLParser):
@@ -110,6 +115,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
 
             if tag in TAG_LIST:
                 self.doc += START_TAG[tag]
+            elif tag == "colorful-block":
+                self.doc += "</div>"
 
         def handle_endtag(self, tag: str) -> None:
             print("Encountered an end tag :", tag)
@@ -127,9 +134,9 @@ def clovis_to_clovis(clovis_input: str) -> str:
 
     # Pre-processing the study-sheet
     # Special characters
-    clovis_input = clovis_input.replace("\t", "\\t")
+    # clovis_input = clovis_input.replace("\t", "\\t")
     # clovis_input = clovis_input.replace("\n", "\\n")
-    clovis_input = clovis_input.replace("\r", "\\r")
+    # clovis_input = clovis_input.replace("\r", "\\r")
 
     soup = BeautifulSoup(clovis_input, "html.parser")
 
@@ -157,7 +164,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
     rename_tags(soup, ".definition p", "definition-text")
 
     # Colorful blocks
-    rename_tags(soup, ".colorful-block:not(.quote)", "colorful-block")
+    for c in COLORFUL_BLOCKS:
+        rename_tags(soup, f".{c}", c)
 
     # Inline styles
     rename_tags(soup, ".hl-yellow", "hl-yellow")

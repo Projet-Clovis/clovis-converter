@@ -121,12 +121,15 @@ def clovis_to_tex(clovis_input: str) -> str:
             print("Encountered some data  :", repr(data))
 
             if data.strip() != "":
+                for char in ("\\", "&", "%", "$", "#", "_", "{", "}", "~", "^"):
+                    data = data.replace(char, f"\\{char}")
+
                 self.doc += data
 
     # Pre-processing the study-sheet
-    clovis_input = clovis_input.replace("\t", "\\t")
+    # clovis_input = clovis_input.replace("\t", "\\t")
     # clovis_input = clovis_input.replace("\n", "\\n")
-    clovis_input = clovis_input.replace("\r", "\\r")
+    # clovis_input = clovis_input.replace("\r", "\\r")
 
     soup = BeautifulSoup(clovis_input, "html.parser")
 
