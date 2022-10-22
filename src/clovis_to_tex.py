@@ -121,8 +121,12 @@ def clovis_to_tex(clovis_input: str) -> str:
             print("Encountered some data  :", repr(data))
 
             if data.strip() != "":
-                for char in ("\\", "&", "%", "$", "#", "_", "{", "}", "~", "^"):
+                for char in ("&", "%", "$", "#", "_", "{", "}"):
                     data = data.replace(char, f"\\{char}")
+
+                data = data.replace("~", r"\textasciitilde")
+                data = data.replace("^", r"\textasciicircum")
+                data = data.replace("\\", r"\textbackslash")
 
                 self.doc += data
 
