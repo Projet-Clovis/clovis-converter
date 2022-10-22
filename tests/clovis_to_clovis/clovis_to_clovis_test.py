@@ -1,17 +1,43 @@
-from src.clovis_to_tex import clovis_to_tex
+# How to:
+# check clovis_to_tex_tests.py for reference
+from clovis_to_clovis import clovis_to_clovis
 
 
-def test(test_input: str, expected_output: str) -> None:
-    result = clovis_to_tex(test_input)
+def _check_conversion(input_location: str, output_location: str) -> None:
+    """Internal function."""
+    with open(input_location) as file:
+        content: str = file.read()
+
+    with open(output_location) as file:
+        expected_output: str = file.read()
+
+    result = clovis_to_clovis(content)
+
     assert result == expected_output
 
 
-def h1_test():
-    test_input = '<div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div>'
-    expected_output = '<h1 class="title">Some h1</h1>\n'
+def check_conversion(block_name: str) -> None:
+    _check_conversion(
+        f"tests/assets/study-sheet/block/core/{block_name}-old.html",
+        f"tests/assets/study-sheet/block/core/{block_name}.html",
+    )
 
-    test(test_input, expected_output)
 
+def test_h1() -> None:
+    check_conversion("h1")
+
+
+def test_definition() -> None:
+    check_conversion("definition")
+
+
+def test_colorful_block() -> None:
+    # test for colorful-block danger
+    check_conversion("colorful-block")
+
+
+# PREVIOUS TESTS (todo: make files for each one of them)
+r"""
 
 def h2_test():
     test_input = '</div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div>'
@@ -78,3 +104,6 @@ def katex_inline_code_test():
     '''
 
     test(test_input, expected_output)
+
+
+"""
