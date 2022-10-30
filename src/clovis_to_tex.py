@@ -4,6 +4,26 @@ Used to convert Clovis study sheet to LaTeX format.
 from typing import Final
 
 
+def escape_text(text: str) -> str:
+    text = text.replace("~", r"\textasciitilde")
+    text = text.replace("^", r"\textasciicircum")
+    text = text.replace("\\", r"\textbackslash")
+
+    for char in ("&", "%", "$", "#", "_", "{", "}"):
+        text = text.replace(char, f"\\{char}")
+
+    return text
+
+
+def process_latex(latex: str) -> str:
+    KATEX_MATHBB = ("N", "Z", "Q", "D", "R", "C")
+
+    for char in KATEX_MATHBB:
+        latex = latex.replace(f"\\{char}", "\\mathbb{" + char + "}")
+
+    return latex
+
+
 def clovis_to_tex(clovis_input: str) -> str:
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
@@ -73,7 +93,7 @@ def clovis_to_tex(clovis_input: str) -> str:
         "h1": "}",
         "h2": "}",
         "h3": "}",
-        "h4": "\\\\}",
+        "h4": "}\\vspace{1em}",
         "p": r"\\" + "",
         "quote": "",
         "quote-content": "",
@@ -89,18 +109,22 @@ def clovis_to_tex(clovis_input: str) -> str:
         "f-code": "}",
         "br": "",  # just in case of KeyError in wrong input
         "katex-code": r"\]",
-        "katex-inline-code": r"\\",
+        "katex-inline-code": "",
     }
 
     class MyHTMLParser(HTMLParser):
         def __init__(self) -> None:
             super().__init__()
             self.doc = ""
+            self.inside_tag = {"katex-inline-code": False}
 
         def handle_starttag(
             self, tag: str, attrs: list[tuple[str, str | None]]
         ) -> None:
             print("Encountered a start tag:", tag, attrs)
+
+            if tag == "katex-inline-code":
+                self.inside_tag["katex-inline-code"] = True
 
             if tag in COLORFUL_BLOCKS and tag != "definition":
                 self.doc += r"\clovis" + tag.capitalize() + "{"
@@ -111,6 +135,9 @@ def clovis_to_tex(clovis_input: str) -> str:
         def handle_endtag(self, tag: str) -> None:
             print("Encountered an end tag :", tag)
 
+            if tag == "katex-inline-code":
+                self.inside_tag["katex-inline-code"] = False
+
             if tag in TAG_LIST:
                 self.doc += END_TAG[tag]
 
@@ -118,17 +145,23 @@ def clovis_to_tex(clovis_input: str) -> str:
                 self.doc += "}"
 
         def handle_data(self, data: str) -> None:
-            print("Encountered some data  :", repr(data))
+            print(f"Encountered some data :\n\t{repr(data)}")
+            print(f'"bro what : {self.inside_tag["katex-inline-code"]}"')
 
-            if data.strip() != "":
-                data = data.replace("~", r"\textasciitilde")
-                data = data.replace("^", r"\textasciicircum")
-                data = data.replace("\\", r"\textbackslash")
+            if data.strip() != "" and self.inside_tag["katex-inline-code"]:
+                data_tab = data.split("$")
+                starts_with_dollar = data[0] == "$"
 
-                for char in ("&", "%", "$", "#", "_", "{", "}"):
-                    data = data.replace(char, f"\\{char}")
+                for d in range(len(data_tab)):
+                    if d % 2 == 1 - starts_with_dollar:
+                        data_tab[d] = escape_text(data_tab[d])
+                    else:
+                        data_tab[d] = process_latex(data_tab[d])
 
-                self.doc += data
+                self.doc += "$".join(data_tab)
+
+            elif data.strip() != "":
+                self.doc += escape_text(data)
 
     # Pre-processing the study-sheet
     # clovis_input = clovis_input.replace("\t", "\\t")
@@ -162,6 +195,10 @@ def clovis_to_tex(clovis_input: str) -> str:
     # Colorful-blocks
     for tag in COLORFUL_BLOCKS:
         rename_tags(soup, f".{tag}", f"{tag}")
+
+    # Katex
+    rename_tags(soup, ".katex-code", "katex-code")
+    rename_tags(soup, ".katex-inline-code", "katex-inline-code")
 
     # Special characters
     soup_text = str(soup)

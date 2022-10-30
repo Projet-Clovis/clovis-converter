@@ -103,6 +103,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
         **CB_END_DICT,
     }
 
+    NON_SECABLE_SPACE = "&amp;nbsp;"
+
     class MyHTMLParser(HTMLParser):
         def __init__(self) -> None:
             super().__init__()
@@ -182,7 +184,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
     rename_tags(soup, ".katex-inline-code", "katex-inline-code")
 
     # Special characters
-    soup_text: str = str(soup)  # todo  ?
+    soup_text: str = str(soup).replace(NON_SECABLE_SPACE, "")
 
     # Parser
     parser: MyHTMLParser = MyHTMLParser()
