@@ -46,6 +46,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "definition-text",
         "b",
         "i",
+        "sup",
+        "sub",
         "hl-yellow",
         "f-code",
         "br",
@@ -70,6 +72,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "definition-text": '<p class="text">',
         "b": "<b>",
         "i": "<i>",
+        "sup": "<sup>",
+        "sub": "<sub>",
         "hl-yellow": '<span class="hl-yellow">',
         "f-code": '<span class="f-code">',
         "br": "<br>",
@@ -95,6 +99,8 @@ def clovis_to_clovis(clovis_input: str) -> str:
         "colorful-block": "</div>",
         "b": "</b>",
         "i": "</i>",
+        "sup": "</sup>",
+        "sub": "</sub>",
         "hl-yellow": "</span>",
         "f-code": "</span>",
         "br": "",  # just in case of KeyError in wrong input
@@ -103,7 +109,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
         **CB_END_DICT,
     }
 
-    NON_SECABLE_SPACE = "&amp;nbsp;"
+    NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
 
     class MyHTMLParser(HTMLParser):
         def __init__(self) -> None:
@@ -135,11 +141,6 @@ def clovis_to_clovis(clovis_input: str) -> str:
                 self.doc += data
 
     # Pre-processing the study-sheet
-    # Special characters
-    # clovis_input = clovis_input.replace("\t", "\\t")
-    # clovis_input = clovis_input.replace("\n", "\\n")
-    # clovis_input = clovis_input.replace("\r", "\\r")
-
     soup = BeautifulSoup(clovis_input, "html.parser")
 
     remove_tags(soup, ".mini-title")
@@ -157,9 +158,9 @@ def clovis_to_clovis(clovis_input: str) -> str:
     # Quote / Excerpts
     rename_tags(soup, ".quote", "quote")
     rename_tags(soup, ".quote-content", "quote-content")
-    rename_tags(soup, ".ob-quote .ob-selected-preview:nth-child(1)", "quote-author")
-    rename_tags(soup, ".ob-quote .ob-selected-preview:nth-child(2)", "quote-source")
-    rename_tags(soup, ".ob-quote .ob-selected-preview:nth-child(3)", "quote-date")
+    rename_tags(soup, ".ob-quote [placeholder='Auteur']", "quote-author")
+    rename_tags(soup, ".ob-quote [placeholder='Source']", "quote-source")
+    rename_tags(soup, ".ob-quote [placeholder='Date']", "quote-date")
 
     # Definition
     rename_tags(soup, ".definition-title", "definition-title")
@@ -184,7 +185,10 @@ def clovis_to_clovis(clovis_input: str) -> str:
     rename_tags(soup, ".katex-inline-code", "katex-inline-code")
 
     # Special characters
-    soup_text: str = str(soup).replace(NON_SECABLE_SPACE, "")
+    soup_text: str = str(soup)
+
+    for space in NON_SECABLE_SPACE:
+        soup_text = soup_text.replace(space, "")
 
     # Parser
     parser: MyHTMLParser = MyHTMLParser()
