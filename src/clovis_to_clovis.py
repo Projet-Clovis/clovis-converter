@@ -2,163 +2,208 @@
 Used to convert old Clovis study sheet to the new format.
 And later, may be used to validate study sheet?
 """
-
-from bs4 import BeautifulSoup
-from html.parser import HTMLParser
-from common import remove_tags, rename_tags
-
-REMOVE_ENDING_BR_TAGS = ('h1', 'h2', 'h3', 'h4', 'p')
-REMOVE_EMPTY_TAGS = ('b', 'i')
-TAGS_LIST = ('h1', 'h2', 'h3', 'h4', 'p', 'b', 'i')
-COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
-                'danger', 'summary', 'reminder', 'advice', 'remark')
-CLASS_LIST = ()
+from typing import Final, Pattern
 
 
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.doc = ''
-        self.stack = []
+def clovis_to_clovis(clovis_input: str) -> str:
+    from bs4 import BeautifulSoup
+    from html.parser import HTMLParser
+    from common import remove_tags, rename_tags
+    import re
 
-    def handle_starttag(self, tag, attrs):
-        print("Encountered a start tag:", tag, attrs)
-        attrs = dict(attrs)
+    REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
+    REMOVE_EMPTY_TAGS: Final = ("b", "i")
+    COLORFUL_BLOCKS = (
+        "excerpt",
+        "quote",
+        "example",
+        "byheart",
+        "danger",
+        "summary",
+        "reminder",
+        "advice",
+        "remark",
+    )
 
-        if tag == 'h1':
-            self.doc += '<h1 class="title">'
-        elif tag == 'h2':
-            self.doc += '<h2 class="title">'
-        elif tag == 'h3':
-            self.doc += '<h3 class="title">'
-        elif tag == 'h4':
-            self.doc += '<h4 class="title">'
+    def get_cb_start(cb: str) -> str:
+        return f'<div class="cb-container {cb}">'
 
-        # p with class
-        elif tag == 'p' and 'class' in attrs:
-            if 'definition-title' in attrs['class']:
-                self.doc += '<p class="definition-title">'
-                self.stack.append('p')
+    CB_START_DICT: Final = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
+    CB_END_DICT: Final = {cb: "</div>" for cb in COLORFUL_BLOCKS}
 
-            elif attrs['class'] == 'title':
-                self.doc += '<h1 class="title">'
-                self.stack.append('h1')
+    TAG_LIST: Final = (
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "quote",
+        "quote-content",
+        "quote-author",
+        "quote-source",
+        "quote-date",
+        "definition-title",
+        "definition-text",
+        "b",
+        "i",
+        "sup",
+        "sub",
+        "hl-yellow",
+        "f-code",
+        "br",
+        "katex-code",
+        "katex-inline-code",
+        *COLORFUL_BLOCKS,
+    )
 
-            elif 'subtitle' in attrs['class']:
-                self.doc += '<h2 class="title">'
-                self.stack.append('h2')
+    START_TAG: Final = {
+        "h1": '<h1 class="title">',
+        "h2": '<h2 class="title">',
+        "h3": '<h3 class="title">',
+        "h4": '<h4 class="title">',
+        "p": '<p class="text">',
+        "quote": '<div class="quote-container">',
+        "quote-content": '<p class="quote-content">',
+        "quote-author": '<p class="quote-author">',
+        "quote-source": '<p class="quote-source">',
+        "quote-date": '<p class="quote-date">',
+        "definition-title": '<div class="cb-container definition">'
+        '<p class="definition-title">',
+        "definition-text": '<p class="text">',
+        "b": "<b>",
+        "i": "<i>",
+        "sup": "<sup>",
+        "sub": "<sub>",
+        "hl-yellow": '<span class="hl-yellow">',
+        "f-code": '<span class="f-code">',
+        "br": "<br>",
+        "katex-code": '<div class="katex-container"><p class="katex-code">',
+        "katex-inline-code": '<div class="katex-container"><p '
+        'class="katex-inline-code">',
+        **CB_START_DICT,
+    }
 
-            elif 'subpart' in attrs['class']:
-                self.doc += '<h3 class="title">'
-                self.stack.append('h3')
+    END_TAG: Final = {
+        "h1": "</h1>",
+        "h2": "</h2>",
+        "h3": "</h3>",
+        "h4": "</h4>",
+        "p": "</p>",
+        "quote": "</div>",
+        "quote-content": "</p>",
+        "quote-author": "</p>",
+        "quote-source": "</p>",
+        "quote-date": "</p>",
+        "definition-title": "</p>",
+        "definition-text": "</p></div>",
+        "colorful-block": "</div>",
+        "b": "</b>",
+        "i": "</i>",
+        "sup": "</sup>",
+        "sub": "</sub>",
+        "hl-yellow": "</span>",
+        "f-code": "</span>",
+        "br": "",  # just in case of KeyError in wrong input
+        "katex-code": "</p></div>",
+        "katex-inline-code": "</p></div>",
+        **CB_END_DICT,
+    }
 
-            elif 'subhead' in attrs['class']:
-                self.doc += '<h4 class="title">'
-                self.stack.append('h4')
+    NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
 
-            elif 'text' in attrs['class']:
-                self.doc += '<p class="text">'
-                self.stack.append('p')
+    class MyHTMLParser(HTMLParser):
+        def __init__(self) -> None:
+            super().__init__()
+            self.doc = ""
 
-            else:
-                self.stack.append('p')
+        def handle_starttag(
+            self, tag: str, attrs: list[tuple[str, str | None]]
+        ) -> None:
+            print("Encountered a start tag:", tag, attrs)
 
-        elif tag == 'p':
-            self.doc += '<p class="text">'
-            self.stack.append('p')
+            if tag in TAG_LIST:
+                self.doc += START_TAG[tag]
+            elif tag == "colorful-block":
+                self.doc += "</div>"
 
-        elif tag == 'span':
-            if 'class' in attrs:
-                if 'hl-yellow' in attrs['class']:
-                    self.doc += '<span class="hl-yellow">'
+        def handle_endtag(self, tag: str) -> None:
+            print("Encountered an end tag :", tag)
 
-                elif 'f-code' in attrs['class']:
-                    self.doc += '<span class="f-code">'
+            if tag in TAG_LIST:
+                self.doc += END_TAG[tag]
+            elif tag == "colorful-block":
+                self.doc += "</div>"
 
-            #self.stack.append('span')
+        def handle_data(self, data: str) -> None:
+            print("Encountered some data  :", repr(data))
 
-        elif tag == 'b':
-            self.doc += '<b>'
-        elif tag == 'i':
-            self.doc += '<i>'
+            if data.strip() != "":
+                self.doc += data
 
-        elif tag == 'br':
-            self.doc += '<br>'
+    # Pre-processing the study-sheet
+    soup = BeautifulSoup(clovis_input, "html.parser")
 
-        elif tag == 'section' and 'colorful-block' in attrs['class']:
-            colorful_block_class = attrs['class'].split()[-1]
-            self.doc += f'''<div class="cb-container {colorful_block_class}">
-    <div class="cb-title-container">
-        <span class="cb-title-icon"></span>
-        <span class="cb-title"></span>
-    </div>
-'''
+    remove_tags(soup, ".mini-title")
+    remove_tags(soup, ".block-edit-button-container")
+    remove_tags(soup, ".material-icons")
 
+    rename_tags(soup, ".cb-content")
 
-    def handle_endtag(self, tag):
-        print("Encountered an end tag :", tag)
+    # Headings
+    rename_tags(soup, "p.title", "h1")
+    rename_tags(soup, "p.subtitle", "h2")
+    rename_tags(soup, "p.subpart", "h3")
+    rename_tags(soup, "p.subhead", "h4")
 
-        if tag == 'h1':
-            self.doc += '</h1>\n'
-        elif tag == 'h2':
-            self.doc += '</h2>\n'
-        elif tag == 'h3':
-            self.doc += '</h3>\n'
-        elif tag == 'h4':
-            self.doc += '</h4>\n'
+    # Quote / Excerpts
+    rename_tags(soup, ".quote", "quote")
+    rename_tags(soup, ".quote-content", "quote-content")
+    rename_tags(soup, ".ob-quote [placeholder='Auteur']", "quote-author")
+    rename_tags(soup, ".ob-quote [placeholder='Source']", "quote-source")
+    rename_tags(soup, ".ob-quote [placeholder='Date']", "quote-date")
 
-        elif tag == 'p':
-            matching_tag = self.stack.pop()
-            self.doc += f'</{matching_tag}>\n'
+    # Definition
+    rename_tags(soup, ".definition-title", "definition-title")
+    rename_tags(soup, ".definition p", "definition-text")
 
-        elif tag == 'span':
-            self.doc += '</span>'
+    # Colorful blocks
+    for c in COLORFUL_BLOCKS:
+        rename_tags(soup, f".{c}", c)
 
-        elif tag == 'b':
-            self.doc += '</b>'
-        elif tag == 'i':
-            self.doc += '</i>'
+    # Inline styles
+    rename_tags(soup, ".hl-yellow", "hl-yellow")
+    rename_tags(soup, ".f-code", "f-code")
 
-        elif tag == 'section':
-            self.doc += '</div>\n'
+    # Code
+    remove_tags(soup, ".code-render")
 
+    # Katex
+    remove_tags(soup, ".katex-render")
+    remove_tags(soup, ".katex-inline-render")
 
-    def handle_data(self, data):
-        print("Encountered some data  :", repr(data))
+    rename_tags(soup, ".katex-code", "katex-code")
+    rename_tags(soup, ".katex-inline-code", "katex-inline-code")
 
-        if data.strip() != '':
-            self.doc += data
+    # Special characters
+    soup_text: str = str(soup)
 
+    for space in NON_SECABLE_SPACE:
+        soup_text = soup_text.replace(space, "")
 
+    # Parser
+    parser: MyHTMLParser = MyHTMLParser()
+    parser.feed(soup_text)
 
-parser = MyHTMLParser()
+    for tag in REMOVE_ENDING_BR_TAGS:
+        br_regex: str = f"(?P<variable>(<br>)*)</{tag}>"
+        pattern: Pattern[str] = re.compile(br_regex)
+        parser.doc = re.sub(pattern, f"</{tag}>", parser.doc)
 
+    # remove empty span, b, i, ...
+    # todo: another way of removing (smarter): checking if "text" content is empty
+    # todo: like you would do in jQuery?
+    for i in range(5):  # 5 times so it can replace nested empty tags
+        for tag in REMOVE_EMPTY_TAGS:
+            parser.doc = parser.doc.replace(f"<{tag}></{tag}>", "")
 
-study_sheet_example = '''<div id="main-content" class="preview" style="padding-left: 25px;">
-
-
-            <div class="container toggle-h1" data-hide="h1-1"><p placeholder="Titre" class="title" data-count="I - " contenteditable="false">Some h1</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h2 hide-h1-1" data-hide="h2-1" style=""><p placeholder="Sous-titre" class="subtitle" data-count="A) " contenteditable="false">Some h2</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h3 hide-h1-1 hide-h2-1" data-hide="h3-1" style=""><p placeholder="Sous-partie" class="subpart" data-count="a) " contenteditable="false">Some h3</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container toggle-h4 hide-h1-1 hide-h2-1 hide-h3-1" data-hide="h4-1" style=""><p placeholder="Titre inférieur" class="subhead" data-count="1) " contenteditable="false">Some h4</p><div class="toggle-title-container"><i class="material-icons toggle-title"></i></div></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some text<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="hl-yellow">highlighted text</span>, some <b>bold text</b>, some <i>italic text</i>, some <i><b>bold and italic</b></i>, some <span class="hl-yellow"><b>bold and highlighted</b></span>, some <span class="hl-yellow"><i><b>bold, italic highlighted text</b></i></span><i><b></b></i>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><p placeholder="Entrez du texte" class="text" contenteditable="false">Some <span class="f-code">inline code</span>.<br></p></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block danger"><section class="cb-content"><article class="mini-title mt-danger">Attention</article><p placeholder="Avertissement important" contenteditable="false">Some warning<br></p></section></section></div>        <div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1" style=""><section class="colorful-block definition"><section class="cb-content"><article class="mini-title mt-definition">Définition</article><p placeholder="Mot défini" class="definition-title" contenteditable="false">Some word<br></p><p placeholder="Définition" contenteditable="false">Some definition<br></p></section></section></div><div class="container hide-h1-1 hide-h2-1 hide-h3-1 hide-h4-1"><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><div class="block-edit-button-container"></div><section class="colorful-block quote"><section class="cb-content"><section class="quote-container"><article class="quote-content" placeholder="Citation" contenteditable="false">This is a short citation<br></article></section><section class="optional-button-container ob-quote"><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Auteur" contenteditable="false">John Doe<br></article></section><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Source" contenteditable="false">The Book Written by Him<br></article></section><section class="optional-button ob-selected ob-selected-preview"><i class="material-icons optional-icon" style="display: none;">clear</i><article class="optional-text" placeholder="Date" contenteditable="false">1857</article></section></section></section></section></div>                </div>'''
-
-
-## Main
-soup = BeautifulSoup(study_sheet_example, 'html.parser')
-
-remove_tags(soup, '.mini-title')
-remove_tags(soup, '.block-edit-button-container')
-remove_tags(soup, '.material-icons')
-
-rename_tags(soup, '.cb-content')
-
-parser.feed(str(soup))
-parser.doc += '\n'
-
-for tag in REMOVE_ENDING_BR_TAGS:
-    parser.doc = parser.doc.replace(f'<br></{tag}>', f'</{tag}>')
-
-# remove empty span, b, i, ...
-for i in range(5): # 5 times so it can replace nested empty tags
-    for tag in REMOVE_EMPTY_TAGS:
-        parser.doc = parser.doc.replace(f'<{tag}></{tag}>', '')
-
-print(parser.doc)
-
+    return parser.doc

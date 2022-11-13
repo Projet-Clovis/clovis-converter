@@ -1,68 +1,58 @@
 from html.parser import HTMLParser
-
-study_sheet_name = "Algorithmes d'Optimisation des Graphes"
-author = "Licence 3"
-date = "2021 - 2022"
+from typing import Final
 
 
 class MyHTMLParser(HTMLParser):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.doc = ''
+        self.doc: str = ""
 
-    def handle_starttag(self, tag, attrs):
-        print("Encountered a start tag:", tag, attrs)
-        attrs = dict(attrs)
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "h1":
+            self.doc += "# "
+        elif tag == "h2":
+            self.doc += "## "
+        elif tag == "h3":
+            self.doc += "### "
+        elif tag == "h4":
+            self.doc += "#### "
+        elif tag == "b":
+            self.doc += "**"
+        elif tag == "i":
+            self.doc += "*"
 
-        if tag == 'h1':
-            self.doc += '# '
-        elif tag == 'h2':
-            self.doc += '## '
-        elif tag == 'h3':
-            self.doc += '### '
-        elif tag == 'h4':
-            self.doc += '#### '
-        elif tag == 'b':
-            self.doc += '**'
-        elif tag == 'i':
-            self.doc += '*'
-
-
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         print("Encountered an end tag :", tag)
 
-        if tag == 'h1':
-            self.doc += '\n\n'
-        elif tag == 'h2':
-            self.doc += '\n\n'
-        elif tag == 'h3':
-            self.doc += '\n\n'
-        elif tag == 'h4':
-            self.doc += '\n\n'
-        elif tag == 'b':
-            self.doc += '**'
-        elif tag == 'i':
-            self.doc += '*'
-        elif tag == 'p':
-            self.doc += '  \n\n'
+        if tag == "h1":
+            self.doc += "\n\n"
+        elif tag == "h2":
+            self.doc += "\n\n"
+        elif tag == "h3":
+            self.doc += "\n\n"
+        elif tag == "h4":
+            self.doc += "\n\n"
+        elif tag == "b":
+            self.doc += "**"
+        elif tag == "i":
+            self.doc += "*"
+        elif tag == "p":
+            self.doc += "  \n\n"
 
-
-    def handle_data(self, data):
+    def handle_data(self, data: str) -> None:
         print("Encountered some data  :", repr(data))
 
-        if data.strip() != '':
+        if data.strip() != "":
             self.doc += data
-
 
 
 parser = MyHTMLParser()
 
-
-study_sheet_example = '''<!-- Text -->
+study_sheet_example: Final = """<!-- Text -->
 <p class="text">Some text.</p>
 
-<!-- Formatted text -->
-<p class="text">Some <b>bold</b> text and also <i>italic</i>, even <b><i>both</i></b>.</p>
+<!-- Formatted text --> <p class="text">Some <b>bold</b> text and also <i>italic</i>,
+ even <b><i>both</i></b>.</p>
 
 <!-- Title : h1 -->
 <h1 class="title">Some h1 title</h1>
@@ -85,8 +75,7 @@ study_sheet_example = '''<!-- Text -->
         </div>
         <p class="text">Some text, Clovis is the best.</p>
     </div>
-</div>'''
+</div>"""
 
 parser.feed(study_sheet_example)
-parser.doc += '\n'
-
+parser.doc += "\n"

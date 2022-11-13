@@ -1,262 +1,269 @@
-from bs4 import BeautifulSoup
-from html.parser import HTMLParser
-from common import remove_tags, rename_tags
+"""
+Used to convert Clovis study sheet to LaTeX format.
+"""
+import re
+from typing import Final
 
-## CONSTANTS
-COLORFUL_BLOCKS = ('definition', 'excerpt', 'quote', 'example', 'byheart',
-                'danger', 'summary', 'reminder', 'advice', 'remark')
+KATEX_MATHBB = ("N", "Z", "Q", "D", "R", "C")
 
-TAB = 4 * " "
+# commands specific to Katex, not to Latex
+KATEX_COMMANDS_TABLE: Final = {**{c: "mathbb{" + c + "}" for c in KATEX_MATHBB}}
 
-
-
-study_sheet_name = "Study Sheet Name"
-author = "Study Sheet Author"
-date = r"\today"
-
-
-doc = r'''
-\documentclass{article}%
-\usepackage[T1]{fontenc}%
-\usepackage[utf8]{inputenc}%
-\usepackage{lmodern}%
-\usepackage{textcomp}%
-\usepackage{lastpage}%
-%
-\usepackage{soul} % highlighting
-\usepackage{inconsolata} % monospace font
-\usepackage{fontawesome5}
-%
-\usepackage{xcolor}
-\usepackage[framemethod=tikz]{mdframed}
-\usepackage{tikzpagenodes}
-\usetikzlibrary{calc}
-%
-
-% -------------------- Colors --------------------
-\definecolor{definition}{HTML}{2f80ed}
-\definecolor{definition-bg}{HTML}{e0ecfd}
-
-\definecolor{danger-color}{HTML}{e6505f}
-\definecolor{danger-bg-color}{HTML}{fce5e7}
-
-\definecolor{code-bg-color}{HTML}{fcfcfc} % todo: temp color
-\definecolor{code-border-color}{HTML}{dadce0} % todo: temp color
-
-\definecolor{hl-yellow-color}{HTML}{fef3c7}
-
-
-
-% -------------------- Macros --------------------
-% highlight function
-\newcommand{\highlight}[2]{%
-    \begingroup
-    \sethlcolor{#1}%
-    \hl{#2}%
-    \endgroup
-}
-
-\newcommand{\hlYellow}[1]{%
-    \highlight{hl-yellow-color}{#1}%
+SYMBOLS_TABLE: Final = {
+    "⩽": "leqslant",
+    "⩾": "geqslant",
+    "≠": "neq",
+    "≈": "approx",
+    "⟼": "longmapsto",
+    "⇔": "iff",
+    "ϕ": "phi",
+    "φ": "phi",
+    "Φ": "Phi",
+    "λ": "lambda",
+    "Λ": "Lambda",
+    "ω": "omega",
+    "Ω": "Omega",
+    "π": "pi",
+    "ϖ": "pi",
+    "Π": "Pi",
+    "ℝ": "mathbb{R}",
+    "⋅": "cdot",
 }
 
 
-
-% inlineCode (without border)
-\newcommand{\inlineCodeWithoutBorder}[1]{%
-    {\small\tt \highlight{code-bg-color}{#1}}%
-}
-
-
-% inlineCode (with border)
-\usepackage[most]{tcolorbox}
-\tcbset{
-    on line,
-    boxsep=2px,
-    left=0pt,
-    right=0pt,
-    top=0pt,
-    bottom=0pt,
-    boxrule=0.5px,
-    colframe=code-border-color,
-    colback=code-bg-color,
-    highlight math style={enhanced},
-    breakable
-}
-
-\newcommand{\inlineCode}[1]{%
-    \tcbox{{\small\tt #1}}%
-}
+def replace_symbols(text: str, inside_text: bool = False) -> str:
+    if inside_text:
+        for char in SYMBOLS_TABLE.keys():
+            text = text.replace(char, f"$\\{SYMBOLS_TABLE[char]}$ ")
+    else:
+        for char in SYMBOLS_TABLE.keys():
+            text = text.replace(char, f"\\{SYMBOLS_TABLE[char]} ")
+    return text
 
 
-% -------------------- colorful-blocks --------------------
-\mdfdefinestyle{definition-style}{%
-  innertopmargin=10px,
-  innerbottommargin=10px,
-  linecolor=definition,
-  backgroundcolor=definition-bg,
-  roundcorner=4px
-}
-\newmdenv[style=definition-style]{definition}
+def replace_katex_commands(text: str) -> str:
+    """Replaces incompatible Katex commands with Latex ones."""
+    for char in KATEX_COMMANDS_TABLE.keys():
+        re.sub(f"\\\{char}$", f"\\\{KATEX_COMMANDS_TABLE[char]}", text)
+        re.sub(f"\\\{char} ", f"\\\{KATEX_COMMANDS_TABLE[char]} ", text)
 
-\newcommand\clovisDefinition[2]{
-    \begin{definition}
-    { \scriptsize \textcolor{definition}{\faIcon{graduation-cap} \textbf{DEFINITION}}}
-    \vspace{3px}
-    \\ \underline{\textbf{#1}}
-    \vspace{2.5px}
-    \\ #2
-    \end{definition}
-}
+    return text
 
 
-\newcommand\clovisColorfulBlock[2]{
-    % #1 = danger (name)
-    % #2 = Danger (color)
-    % #3 = danger-bg-color (background color)
-    \mdfdefinestyle{#1-style}{%
-        innertopmargin=10px,
-        innerbottommargin=10px,
-        linecolor=#1-color,
-        backgroundcolor=#1-bg-color,
-        roundcorner=4px
+def escape_text(text: str) -> str:
+    text = text.replace("~", r"\textasciitilde")
+    text = text.replace("^", r"\textasciicircum")
+    text = text.replace("\\", r"\textbackslash")
+
+    for char in ("&", "%", "$", "#", "_", "{", "}"):
+        text = text.replace(char, f"\\{char}")
+
+    text = replace_symbols(text, True)
+    text = text.replace(" :", " :")
+
+    return text
+
+
+def process_latex(latex: str) -> str:
+    latex = replace_katex_commands(latex)
+    latex = replace_symbols(latex)
+
+    return latex
+
+
+def process_katex_inline_code(latex: str) -> str:
+    double_dollar_parts = latex.split("$$")
+
+    for i in range(len(double_dollar_parts)):
+        if i % 2 == 1:
+            double_dollar_parts[i] = process_latex(double_dollar_parts[i])
+        else:
+            single_dollar_parts = double_dollar_parts[i].split("$")
+
+            for j in range(len(single_dollar_parts)):
+                if j % 2 == 1:
+                    single_dollar_parts[j] = process_latex(single_dollar_parts[j])
+                else:
+                    single_dollar_parts[j] = escape_text(single_dollar_parts[j])
+
+            double_dollar_parts[i] = "$".join(single_dollar_parts)
+
+    return "$$".join(double_dollar_parts)
+
+
+def clovis_to_tex(clovis_input: str) -> str:
+    from bs4 import BeautifulSoup
+    from html.parser import HTMLParser
+    from common import rename_tags
+
+    # CONSTANTS
+    COLORFUL_BLOCKS: Final = (
+        "definition",
+        "excerpt",
+        "quote",
+        "example",
+        "byheart",
+        "danger",
+        "summary",
+        "reminder",
+        "advice",
+        "remark",
+    )
+
+    TAG_LIST = (
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "quote",
+        "quote-content",
+        "quote-author",
+        "quote-source",
+        "quote-date",
+        "cb-text",
+        "definition-title",
+        "definition-text",
+        "b",
+        "i",
+        "sup",
+        "sub",
+        "hl-yellow",
+        "f-code",
+        "br",
+        "katex-code",
+        "katex-inline-code",
+    )
+
+    START_TAG: Final = {
+        "h1": r"\section{",
+        "h2": r"\subsection{",
+        "h3": r"\subsubsection{",
+        "h4": r"\paragraph{",
+        "p": "",
+        "quote": r"\clovisQuote{",
+        "quote-content": "",
+        "quote-author": "",
+        "quote-source": "",
+        "quote-date": "",
+        "cb-text": "",
+        "definition-title": r"\clovisDefinition{",
+        "definition-text": "",
+        "b": r"\textbf{",
+        "i": r"\textit{",
+        "sup": "$^{",
+        "sub": "$_{",
+        "hl-yellow": r"\hlYellow{",
+        "f-code": r"\inlineCode{",
+        "br": r"\\",
+        "katex-code": r"\[",
+        "katex-inline-code": "",
     }
-    \newmdenv[style=#1-style]{#1}
 
-
-    \expandafter\newcommand\csname clovis#2\endcsname[1]{
-        \begin{#1}
-        {\scriptsize \textcolor{#1-color}{\faIcon{exclamation-triangle} \textbf{DANGER}}}
-        \vspace{3px}
-        \\ ##1
-        \end{#1}
+    END_TAG: Final = {
+        "h1": "}",
+        "h2": "}",
+        "h3": "}",
+        "h4": r"\vspace{8px}\\}\hspace{-1em}",
+        "p": r"\\" + "",
+        "quote": "",
+        "quote-content": "}{",
+        "quote-author": "}{",
+        "quote-source": "}{",
+        "quote-date": "}",
+        "cb-text": "",
+        "definition-title": "}{",
+        "definition-text": "}",
+        "b": "}",
+        "i": "}",
+        "sup": "}$",
+        "sub": "}$",
+        "hl-yellow": "}",
+        "f-code": "}",
+        "br": "",  # just in case of KeyError in wrong input
+        "katex-code": r"\]",
+        "katex-inline-code": r"\\",
     }
-}
 
-\clovisColorfulBlock{danger}{Danger}
+    class MyHTMLParser(HTMLParser):
+        def __init__(self) -> None:
+            super().__init__()
+            self.doc = ""
+            self.inside_tag = {"katex-inline-code": False}
 
+        def handle_starttag(
+            self, tag: str, attrs: list[tuple[str, str | None]]
+        ) -> None:
+            print("Encountered a start tag:", tag, attrs)
 
-% -------------------- Study Sheet --------------------
-\title{Study Sheet Name}%
-\author{Study Sheet Author}%
-\date{\today}%
-\normalsize%
-%
-\setcounter{tocdepth}{4}
-\setcounter{secnumdepth}{4}
-%
-\begin{document}%
-\normalsize%
-\maketitle%
-\tableofcontents%
-\newpage%
+            if tag == "katex-inline-code":
+                self.inside_tag["katex-inline-code"] = True
 
+            if tag in COLORFUL_BLOCKS and tag != "definition":
+                self.doc += r"\clovis" + tag.capitalize() + "{"
 
-'''
+            elif tag in TAG_LIST:
+                self.doc += START_TAG[tag]
 
+        def handle_endtag(self, tag: str) -> None:
+            print("Encountered an end tag :", tag)
 
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.doc = ''
+            if tag == "katex-inline-code":
+                self.inside_tag["katex-inline-code"] = False
 
-        self.definition_active = False
+            if tag in TAG_LIST:
+                self.doc += END_TAG[tag]
 
+            elif tag in COLORFUL_BLOCKS and tag != "definition":
+                self.doc += "}"
 
-    def handle_starttag(self, tag, attrs):
-        print("Encountered a start tag:", tag, attrs)
-        attrs = dict(attrs)
+        def handle_data(self, data: str) -> None:
+            print(f"Encountered some data :\n\t{repr(data)}")
 
-        if tag == 'h1':
-            self.doc += r"\section{"
-        elif tag == 'h2':
-            self.doc += r"\subsection{"
-        elif tag == 'h3':
-            self.doc += r"\subsubsection{"
-        elif tag == 'h4':
-            self.doc += r"\paragraph{"
+            if data.strip() != "" and self.inside_tag["katex-inline-code"]:
+                self.doc += process_katex_inline_code(data)
 
-        elif tag == 'definition-title':
-            self.doc += r"\clovisDefinition{"
+            elif data.strip() != "":
+                self.doc += escape_text(data)
 
-        elif tag in COLORFUL_BLOCKS and tag != "definition":
-            self.doc += r"\clovis" + tag.capitalize() + "{"
+    # Pre-processing the study-sheet
+    soup = BeautifulSoup(clovis_input, "html.parser")
 
-        elif tag == 'b':
-            self.doc += r"\textbf{"
-        elif tag == 'i':
-            self.doc += r"\textit{"
+    # Definition
+    rename_tags(soup, ".definition-title", "definition-title")
+    rename_tags(soup, ".definition .text", "definition-text")
 
-        elif tag == 'span' and 'class' in attrs:
-            if 'hl-yellow' in attrs['class']:
-                self.doc += r"\hlYellow{"
-            if 'f-code' in attrs['class']:
-                self.doc += r"\inlineCode{"
+    # Quote / Excerpts
+    rename_tags(soup, ".quote", "quote")
+    rename_tags(soup, ".quote-content", "quote-content")
+    rename_tags(soup, ".quote-author", "quote-author")
+    rename_tags(soup, ".quote-source", "quote-source")
+    rename_tags(soup, ".quote-date", "quote-date")
 
+    # Colorful blocks
+    rename_tags(soup, ".cb-container .text", "cb-text")
 
-    def handle_endtag(self, tag):
-        print("Encountered an end tag :", tag)
+    # Definition
+    rename_tags(soup, ".definition-title", "definition-title")
+    rename_tags(soup, ".definition .text", "definition-text")
 
-        if tag == 'h1':
-            self.doc += "}\n\n"
-        elif tag == 'h2':
-            self.doc += "}\n\n"
-        elif tag == 'h3':
-            self.doc += "}\n\n"
-        elif tag == 'h4':
-            self.doc += "}\n\n"
+    # Inline styles
+    rename_tags(soup, ".hl-yellow", "hl-yellow")
+    rename_tags(soup, ".f-code", "f-code")
 
-        elif tag == 'b':
-            self.doc += "}"
-        elif tag == 'i':
-            self.doc += "}"
+    # Colorful-blocks
+    for tag in COLORFUL_BLOCKS:
+        rename_tags(soup, f".{tag}", f"{tag}")
 
-        elif tag == 'p':
-            self.doc += r'\\' + "\n\n"
+    # Katex
+    rename_tags(soup, ".katex-code", "katex-code")
+    rename_tags(soup, ".katex-inline-code", "katex-inline-code")
 
-        elif tag == 'definition-title':
-            self.doc += "}{\n" + TAB
-        elif tag == 'definition':
-            self.doc += "\n}\n\n"
+    # Special characters
+    soup_text = str(soup)
 
-        elif tag in COLORFUL_BLOCKS: #todo: faire "if tag in COLORFUL-BLOCK
-            self.doc += "}\n\n"
+    # Parser
+    parser: MyHTMLParser = MyHTMLParser()
+    parser.feed(soup_text)
 
-        elif tag == 'span':
-            self.doc += "}"
-
-
-    def handle_data(self, data):
-        print("Encountered some data  :", repr(data))
-
-        if data.strip() != '':
-            self.doc += data
-
-
-with open('../tests/assets/study-sheet/study-sheet-example.md') as file:
-    study_sheet_example = file.readlines()
-
-# remove first and last line
-study_sheet_example.pop(0)
-study_sheet_example.pop()
-study_sheet_example = ''.join(study_sheet_example)
-
-## Main
-soup = BeautifulSoup(study_sheet_example, 'html.parser')
-
-# Definition
-remove_tags(soup, '.cb-title-container')
-
-rename_tags(soup, '.definition-title', 'definition-title')
-rename_tags(soup, '.definition .text', 'definition-text')
-
-# Colorful-blocks
-for tag in COLORFUL_BLOCKS:
-    rename_tags(soup, f'.{tag} .text', f'{tag}')
-
-parser = MyHTMLParser()
-
-parser.feed(str(soup))
-parser.doc += r"\end{document}" + "\n"
-
-print(parser.doc)
+    return parser.doc
