@@ -44,8 +44,8 @@ def replace_symbols(text: str, inside_text: bool = False) -> str:
 def replace_katex_commands(text: str) -> str:
     """Replaces incompatible Katex commands with Latex ones."""
     for char in KATEX_COMMANDS_TABLE.keys():
-        re.sub(f"\\\{char}$", f"\\\{KATEX_COMMANDS_TABLE[char]}", text)
-        re.sub(f"\\\{char} ", f"\\\{KATEX_COMMANDS_TABLE[char]} ", text)
+        re.sub(f"\\\{char}$", f"\\\{KATEX_COMMANDS_TABLE[char]}", text)  # noqa: W605
+        re.sub(f"\\\{char} ", f"\\\{KATEX_COMMANDS_TABLE[char]} ", text)  # noqa: W605
 
     return text
 
@@ -164,7 +164,7 @@ def clovis_to_tex(clovis_input: str) -> str:
         "h1": "}",
         "h2": "}",
         "h3": "}",
-        "h4": r"\vspace{8px}\\}\hspace{-1em}",
+        "h4": r"}\mbox{}\vspace{8px}\\",
         "p": r"\\" + "",
         "quote": "",
         "quote-content": "}{",
