@@ -174,6 +174,10 @@ def clovis_to_clovis(clovis_input: str) -> str:
     rename_tags(soup, ".hl-yellow", "hl-yellow")
     rename_tags(soup, ".f-code", "f-code")
 
+    # Nested inline styles
+    # "ignore tag" does not exist and will therefore be ignored
+    rename_tags(soup, "hl-yellow hl-yellow", "ignore")
+
     # Code
     remove_tags(soup, ".code-render")
 
@@ -188,7 +192,7 @@ def clovis_to_clovis(clovis_input: str) -> str:
     soup_text: str = str(soup)
 
     for space in NON_SECABLE_SPACE:
-        soup_text = soup_text.replace(space, "")
+        soup_text = soup_text.replace(space, " ")
 
     # Parser
     parser: MyHTMLParser = MyHTMLParser()
