@@ -1,6 +1,4 @@
-# How to:
-# check clovis_to_tex_tests.py for reference
-from clovis_to_clovis import clovis_to_clovis
+from src.from_clovis.to_clovis import clovis_to_clovis
 
 
 def _check_conversion(input_location: str, output_location: str) -> None:
