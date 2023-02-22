@@ -4,6 +4,108 @@ And later, may be used to validate study sheet?
 """
 from typing import Final, Pattern
 
+REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
+REMOVE_EMPTY_TAGS: Final = ("b", "i")
+COLORFUL_BLOCKS = (
+    "excerpt",
+    "quote",
+    "example",
+    "byheart",
+    "danger",
+    "summary",
+    "reminder",
+    "advice",
+    "remark",
+)
+
+
+def get_cb_start(cb: str) -> str:
+    return f'<div class="cb-container {cb}">'
+
+
+CB_START_DICT: Final = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
+CB_END_DICT: Final = {cb: "</div>" for cb in COLORFUL_BLOCKS}
+
+TAG_LIST: Final = (
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "p",
+    "quote",
+    "quote-content",
+    "quote-author",
+    "quote-source",
+    "quote-date",
+    "definition-title",
+    "definition-text",
+    "b",
+    "i",
+    "sup",
+    "sub",
+    "hl-yellow",
+    "f-code",
+    "br",
+    "katex-code",
+    "katex-inline-code",
+    *COLORFUL_BLOCKS,
+)
+
+START_TAG: Final = {
+    "h1": '<h1 class="title">',
+    "h2": '<h2 class="title">',
+    "h3": '<h3 class="title">',
+    "h4": '<h4 class="title">',
+    "p": '<p class="text">',
+    "quote": '<div class="quote-container">',
+    "quote-content": '<p class="quote-content">',
+    "quote-author": '<p class="quote-author">',
+    "quote-source": '<p class="quote-source">',
+    "quote-date": '<p class="quote-date">',
+    "definition-title": '<div class="cb-container definition">'
+                        '<p class="definition-title">',
+    "definition-text": '<p class="text">',
+    "b": "<b>",
+    "i": "<i>",
+    "sup": "<sup>",
+    "sub": "<sub>",
+    "hl-yellow": '<span class="hl-yellow">',
+    "f-code": '<span class="f-code">',
+    "br": "<br>",
+    "katex-code": '<div class="katex-container"><p class="katex-code">',
+    "katex-inline-code": '<div class="katex-container"><p '
+                         'class="katex-inline-code">',
+    **CB_START_DICT,
+}
+
+END_TAG: Final = {
+    "h1": "</h1>",
+    "h2": "</h2>",
+    "h3": "</h3>",
+    "h4": "</h4>",
+    "p": "</p>",
+    "quote": "</div>",
+    "quote-content": "</p>",
+    "quote-author": "</p>",
+    "quote-source": "</p>",
+    "quote-date": "</p>",
+    "definition-title": "</p>",
+    "definition-text": "</p></div>",
+    "colorful-block": "</div>",
+    "b": "</b>",
+    "i": "</i>",
+    "sup": "</sup>",
+    "sub": "</sub>",
+    "hl-yellow": "</span>",
+    "f-code": "</span>",
+    "br": "",  # just in case of KeyError in wrong input
+    "katex-code": "</p></div>",
+    "katex-inline-code": "</p></div>",
+    **CB_END_DICT,
+}
+
+NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
+
 
 def clovis_to_clovis(clovis_input: str) -> str:
     from bs4 import BeautifulSoup
@@ -11,113 +113,13 @@ def clovis_to_clovis(clovis_input: str) -> str:
     from common import remove_tags, rename_tags
     import re
 
-    REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
-    REMOVE_EMPTY_TAGS: Final = ("b", "i")
-    COLORFUL_BLOCKS = (
-        "excerpt",
-        "quote",
-        "example",
-        "byheart",
-        "danger",
-        "summary",
-        "reminder",
-        "advice",
-        "remark",
-    )
-
-    def get_cb_start(cb: str) -> str:
-        return f'<div class="cb-container {cb}">'
-
-    CB_START_DICT: Final = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
-    CB_END_DICT: Final = {cb: "</div>" for cb in COLORFUL_BLOCKS}
-
-    TAG_LIST: Final = (
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "p",
-        "quote",
-        "quote-content",
-        "quote-author",
-        "quote-source",
-        "quote-date",
-        "definition-title",
-        "definition-text",
-        "b",
-        "i",
-        "sup",
-        "sub",
-        "hl-yellow",
-        "f-code",
-        "br",
-        "katex-code",
-        "katex-inline-code",
-        *COLORFUL_BLOCKS,
-    )
-
-    START_TAG: Final = {
-        "h1": '<h1 class="title">',
-        "h2": '<h2 class="title">',
-        "h3": '<h3 class="title">',
-        "h4": '<h4 class="title">',
-        "p": '<p class="text">',
-        "quote": '<div class="quote-container">',
-        "quote-content": '<p class="quote-content">',
-        "quote-author": '<p class="quote-author">',
-        "quote-source": '<p class="quote-source">',
-        "quote-date": '<p class="quote-date">',
-        "definition-title": '<div class="cb-container definition">'
-        '<p class="definition-title">',
-        "definition-text": '<p class="text">',
-        "b": "<b>",
-        "i": "<i>",
-        "sup": "<sup>",
-        "sub": "<sub>",
-        "hl-yellow": '<span class="hl-yellow">',
-        "f-code": '<span class="f-code">',
-        "br": "<br>",
-        "katex-code": '<div class="katex-container"><p class="katex-code">',
-        "katex-inline-code": '<div class="katex-container"><p '
-        'class="katex-inline-code">',
-        **CB_START_DICT,
-    }
-
-    END_TAG: Final = {
-        "h1": "</h1>",
-        "h2": "</h2>",
-        "h3": "</h3>",
-        "h4": "</h4>",
-        "p": "</p>",
-        "quote": "</div>",
-        "quote-content": "</p>",
-        "quote-author": "</p>",
-        "quote-source": "</p>",
-        "quote-date": "</p>",
-        "definition-title": "</p>",
-        "definition-text": "</p></div>",
-        "colorful-block": "</div>",
-        "b": "</b>",
-        "i": "</i>",
-        "sup": "</sup>",
-        "sub": "</sub>",
-        "hl-yellow": "</span>",
-        "f-code": "</span>",
-        "br": "",  # just in case of KeyError in wrong input
-        "katex-code": "</p></div>",
-        "katex-inline-code": "</p></div>",
-        **CB_END_DICT,
-    }
-
-    NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
-
     class MyHTMLParser(HTMLParser):
         def __init__(self) -> None:
             super().__init__()
             self.doc = ""
 
         def handle_starttag(
-            self, tag: str, attrs: list[tuple[str, str | None]]
+                self, tag: str, attrs: list[tuple[str, str | None]]
         ) -> None:
             print("Encountered a start tag:", tag, attrs)
 

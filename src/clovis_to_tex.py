@@ -4,6 +4,95 @@ Used to convert Clovis study sheet to LaTeX format.
 import re
 from typing import Final
 
+# CONSTANTS
+COLORFUL_BLOCKS: Final = (
+    "definition",
+    "excerpt",
+    "quote",
+    "example",
+    "byheart",
+    "danger",
+    "summary",
+    "reminder",
+    "advice",
+    "remark",
+)
+
+TAG_LIST = (
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "p",
+    "quote",
+    "quote-content",
+    "quote-author",
+    "quote-source",
+    "quote-date",
+    "cb-text",
+    "definition-title",
+    "definition-text",
+    "b",
+    "i",
+    "sup",
+    "sub",
+    "hl-yellow",
+    "f-code",
+    "br",
+    "katex-code",
+    "katex-inline-code",
+)
+
+START_TAG: Final = {
+    "h1": r"\section{",
+    "h2": r"\subsection{",
+    "h3": r"\subsubsection{",
+    "h4": r"\paragraph{",
+    "p": "",
+    "quote": r"\clovisQuote{",
+    "quote-content": "",
+    "quote-author": "",
+    "quote-source": "",
+    "quote-date": "",
+    "cb-text": "",
+    "definition-title": r"\clovisDefinition{",
+    "definition-text": "",
+    "b": r"\textbf{",
+    "i": r"\textit{",
+    "sup": "$^{",
+    "sub": "$_{",
+    "hl-yellow": r"\hlYellow{",
+    "f-code": r"\inlineCode{",
+    "br": r"\\",
+    "katex-code": r"\[",
+    "katex-inline-code": "",
+}
+
+END_TAG: Final = {
+    "h1": "}",
+    "h2": "}",
+    "h3": "}",
+    "h4": r"}\mbox{}\vspace{8px}\\",
+    "p": r"\\" + "",
+    "quote": "",
+    "quote-content": "}{",
+    "quote-author": "}{",
+    "quote-source": "}{",
+    "quote-date": "}",
+    "cb-text": "",
+    "definition-title": "}{",
+    "definition-text": "}",
+    "b": "}",
+    "i": "}",
+    "sup": "}$",
+    "sub": "}$",
+    "hl-yellow": "}",
+    "f-code": "}",
+    "br": "",  # just in case of KeyError in wrong input
+    "katex-code": r"\]",
+    "katex-inline-code": r"\\",
+}
+
 KATEX_MATHBB = ("N", "Z", "Q", "D", "R", "C")
 
 # commands specific to Katex, not to Latex
@@ -94,96 +183,8 @@ def process_katex_inline_code(latex: str) -> str:
 def clovis_to_tex(clovis_input: str) -> str:
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
-    from common import rename_tags
+    from src.common import rename_tags
 
-    # CONSTANTS
-    COLORFUL_BLOCKS: Final = (
-        "definition",
-        "excerpt",
-        "quote",
-        "example",
-        "byheart",
-        "danger",
-        "summary",
-        "reminder",
-        "advice",
-        "remark",
-    )
-
-    TAG_LIST = (
-        "h1",
-        "h2",
-        "h3",
-        "h4",
-        "p",
-        "quote",
-        "quote-content",
-        "quote-author",
-        "quote-source",
-        "quote-date",
-        "cb-text",
-        "definition-title",
-        "definition-text",
-        "b",
-        "i",
-        "sup",
-        "sub",
-        "hl-yellow",
-        "f-code",
-        "br",
-        "katex-code",
-        "katex-inline-code",
-    )
-
-    START_TAG: Final = {
-        "h1": r"\section{",
-        "h2": r"\subsection{",
-        "h3": r"\subsubsection{",
-        "h4": r"\paragraph{",
-        "p": "",
-        "quote": r"\clovisQuote{",
-        "quote-content": "",
-        "quote-author": "",
-        "quote-source": "",
-        "quote-date": "",
-        "cb-text": "",
-        "definition-title": r"\clovisDefinition{",
-        "definition-text": "",
-        "b": r"\textbf{",
-        "i": r"\textit{",
-        "sup": "$^{",
-        "sub": "$_{",
-        "hl-yellow": r"\hlYellow{",
-        "f-code": r"\inlineCode{",
-        "br": r"\\",
-        "katex-code": r"\[",
-        "katex-inline-code": "",
-    }
-
-    END_TAG: Final = {
-        "h1": "}",
-        "h2": "}",
-        "h3": "}",
-        "h4": r"}\mbox{}\vspace{8px}\\",
-        "p": r"\\" + "",
-        "quote": "",
-        "quote-content": "}{",
-        "quote-author": "}{",
-        "quote-source": "}{",
-        "quote-date": "}",
-        "cb-text": "",
-        "definition-title": "}{",
-        "definition-text": "}",
-        "b": "}",
-        "i": "}",
-        "sup": "}$",
-        "sub": "}$",
-        "hl-yellow": "}",
-        "f-code": "}",
-        "br": "",  # just in case of KeyError in wrong input
-        "katex-code": r"\]",
-        "katex-inline-code": r"\\",
-    }
 
     class MyHTMLParser(HTMLParser):
         def __init__(self) -> None:
