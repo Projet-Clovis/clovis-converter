@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - "dev"
+      - "main"
+
+jobs:
+  qa-py:
+    name: Python QA
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run Black to check formatting
+        run: poetry run black --check .
+
+      - name: Run Flake8 to lint files
+        run: poetry run flake8
