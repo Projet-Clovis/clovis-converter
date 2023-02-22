@@ -8,7 +8,7 @@ from typing import Final, Pattern
 def clovis_to_clovis(clovis_input: str) -> str:
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
-    from common import remove_tags, rename_tags
+    from src.common import remove_tags, rename_tags
     import re
 
     REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
