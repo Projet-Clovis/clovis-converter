@@ -1,3 +1,7 @@
+import os
+
+print(f"BROOOOO {os.getcwd()}")
+
 from src.from_clovis.to_clovis import clovis_to_clovis
 
 
