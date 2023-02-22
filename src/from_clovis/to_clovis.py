@@ -68,7 +68,7 @@ START_TAG: Final = {
     "quote-source": '<p class="quote-source">',
     "quote-date": '<p class="quote-date">',
     "definition-title": '<div class="cb-container definition">'
-                        '<p class="definition-title">',
+    '<p class="definition-title">',
     "definition-text": '<p class="text">',
     "b": "<b>",
     "i": "<i>",
@@ -79,7 +79,7 @@ START_TAG: Final = {
     "br": "<br>",
     "katex-code": '<div class="katex-container"><p class="katex-code">',
     "katex-inline-code": '<div class="katex-container"><p '
-                         'class="katex-inline-code">',
+    'class="katex-inline-code">',
     **CB_START_DICT,
 }
 
@@ -117,9 +117,7 @@ class MyHTMLParser(HTMLParser):
         super().__init__()
         self.doc = ""
 
-    def handle_starttag(
-            self, tag: str, attrs: list[tuple[str, str | None]]
-    ) -> None:
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         print("Encountered a start tag:", tag, attrs)
 
         if tag in TAG_LIST:

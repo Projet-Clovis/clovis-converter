@@ -190,9 +190,7 @@ class MyHTMLParser(HTMLParser):
         self.doc = ""
         self.inside_tag = {"katex-inline-code": False}
 
-    def handle_starttag(
-            self, tag: str, attrs: list[tuple[str, str | None]]
-    ) -> None:
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         print("Encountered a start tag:", tag, attrs)
 
         if tag == "katex-inline-code":
