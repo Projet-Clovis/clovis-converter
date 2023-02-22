@@ -1,10 +1,10 @@
 # How to:
 # remove the 1st line import
 # c/c common.py here
-# c/c clovis_to_tex.py here
-# in clovis_to_tex.py, remove the line importing common.py
+# c/c to_tex.py here
+# in to_tex.py, remove the line importing common.py
 # it works ! :)
-from clovis_to_tex import clovis_to_tex
+from src.from_clovis.to_tex import clovis_to_tex
 
 
 def _check_conversion(input_location: str, output_location: str) -> None:

@@ -110,7 +110,7 @@ NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
 def clovis_to_clovis(clovis_input: str) -> str:
     from bs4 import BeautifulSoup
     from html.parser import HTMLParser
-    from common import remove_tags, rename_tags
+    from src.common import remove_tags, rename_tags
     import re
 
     class MyHTMLParser(HTMLParser):
