@@ -1,8 +1,12 @@
 """
 Used to convert Clovis study sheet to LaTeX format.
 """
-import re
 from typing import Final
+import re
+from html.parser import HTMLParser
+from bs4 import BeautifulSoup
+
+from src.common import rename_tags
 
 # CONSTANTS
 COLORFUL_BLOCKS: Final = (
@@ -180,53 +184,49 @@ def process_katex_inline_code(latex: str) -> str:
     return "$$".join(double_dollar_parts)
 
 
-def clovis_to_tex(clovis_input: str) -> str:
-    from bs4 import BeautifulSoup
-    from html.parser import HTMLParser
-    from src.common import rename_tags
+class MyHTMLParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.doc = ""
+        self.inside_tag = {"katex-inline-code": False}
 
-
-    class MyHTMLParser(HTMLParser):
-        def __init__(self) -> None:
-            super().__init__()
-            self.doc = ""
-            self.inside_tag = {"katex-inline-code": False}
-
-        def handle_starttag(
+    def handle_starttag(
             self, tag: str, attrs: list[tuple[str, str | None]]
-        ) -> None:
-            print("Encountered a start tag:", tag, attrs)
+    ) -> None:
+        print("Encountered a start tag:", tag, attrs)
 
-            if tag == "katex-inline-code":
-                self.inside_tag["katex-inline-code"] = True
+        if tag == "katex-inline-code":
+            self.inside_tag["katex-inline-code"] = True
 
-            if tag in COLORFUL_BLOCKS and tag != "definition":
-                self.doc += r"\clovis" + tag.capitalize() + "{"
+        if tag in COLORFUL_BLOCKS and tag != "definition":
+            self.doc += r"\clovis" + tag.capitalize() + "{"
 
-            elif tag in TAG_LIST:
-                self.doc += START_TAG[tag]
+        elif tag in TAG_LIST:
+            self.doc += START_TAG[tag]
 
-        def handle_endtag(self, tag: str) -> None:
-            print("Encountered an end tag :", tag)
+    def handle_endtag(self, tag: str) -> None:
+        print("Encountered an end tag :", tag)
 
-            if tag == "katex-inline-code":
-                self.inside_tag["katex-inline-code"] = False
+        if tag == "katex-inline-code":
+            self.inside_tag["katex-inline-code"] = False
 
-            if tag in TAG_LIST:
-                self.doc += END_TAG[tag]
+        if tag in TAG_LIST:
+            self.doc += END_TAG[tag]
 
-            elif tag in COLORFUL_BLOCKS and tag != "definition":
-                self.doc += "}"
+        elif tag in COLORFUL_BLOCKS and tag != "definition":
+            self.doc += "}"
 
-        def handle_data(self, data: str) -> None:
-            print(f"Encountered some data :\n\t{repr(data)}")
+    def handle_data(self, data: str) -> None:
+        print(f"Encountered some data :\n\t{repr(data)}")
 
-            if data.strip() != "" and self.inside_tag["katex-inline-code"]:
-                self.doc += process_katex_inline_code(data)
+        if data.strip() != "" and self.inside_tag["katex-inline-code"]:
+            self.doc += process_katex_inline_code(data)
 
-            elif data.strip() != "":
-                self.doc += escape_text(data)
+        elif data.strip() != "":
+            self.doc += escape_text(data)
 
+
+def clovis_to_tex(clovis_input: str) -> str:
     # Pre-processing the study-sheet
     soup = BeautifulSoup(clovis_input, "html.parser")
 

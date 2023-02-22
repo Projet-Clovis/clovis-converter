@@ -3,6 +3,11 @@ Used to convert old Clovis study sheet to the new format.
 And later, may be used to validate study sheet?
 """
 from typing import Final, Pattern
+from bs4 import BeautifulSoup
+import re
+from html.parser import HTMLParser
+
+from src.common import remove_tags, rename_tags
 
 REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
 REMOVE_EMPTY_TAGS: Final = ("b", "i")
@@ -107,41 +112,37 @@ END_TAG: Final = {
 NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
 
 
+class MyHTMLParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.doc = ""
+
+    def handle_starttag(
+            self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        print("Encountered a start tag:", tag, attrs)
+
+        if tag in TAG_LIST:
+            self.doc += START_TAG[tag]
+        elif tag == "colorful-block":
+            self.doc += "</div>"
+
+    def handle_endtag(self, tag: str) -> None:
+        print("Encountered an end tag :", tag)
+
+        if tag in TAG_LIST:
+            self.doc += END_TAG[tag]
+        elif tag == "colorful-block":
+            self.doc += "</div>"
+
+    def handle_data(self, data: str) -> None:
+        print("Encountered some data  :", repr(data))
+
+        if data.strip() != "":
+            self.doc += data
+
+
 def clovis_to_clovis(clovis_input: str) -> str:
-    from bs4 import BeautifulSoup
-    from html.parser import HTMLParser
-    from src.common import remove_tags, rename_tags
-    import re
-
-    class MyHTMLParser(HTMLParser):
-        def __init__(self) -> None:
-            super().__init__()
-            self.doc = ""
-
-        def handle_starttag(
-                self, tag: str, attrs: list[tuple[str, str | None]]
-        ) -> None:
-            print("Encountered a start tag:", tag, attrs)
-
-            if tag in TAG_LIST:
-                self.doc += START_TAG[tag]
-            elif tag == "colorful-block":
-                self.doc += "</div>"
-
-        def handle_endtag(self, tag: str) -> None:
-            print("Encountered an end tag :", tag)
-
-            if tag in TAG_LIST:
-                self.doc += END_TAG[tag]
-            elif tag == "colorful-block":
-                self.doc += "</div>"
-
-        def handle_data(self, data: str) -> None:
-            print("Encountered some data  :", repr(data))
-
-            if data.strip() != "":
-                self.doc += data
-
     # Pre-processing the study-sheet
     soup = BeautifulSoup(clovis_input, "html.parser")
 
