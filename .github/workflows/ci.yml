@@ -26,3 +26,6 @@ jobs:
 
       - name: Run Flake8 to lint files
         run: poetry run flake8
+
+      - name: Run Mypy to static check types
+        run: poetry run mypy . --strict
