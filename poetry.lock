@@ -51,17 +51,6 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
-name = "bs4"
-version = "0.0.1"
-description = "Dummy package for Beautiful Soup"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-beautifulsoup4 = "*"
-
-[[package]]
 name = "cachetools"
 version = "5.3.0"
 description = "Extensible memoizing collections and decorators"
@@ -346,13 +335,12 @@ test = ["covdefaults (>=2.2.2)", "coverage-enable-subprocess (>=1)", "coverage (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "436a42371fdca12218f7d516dbecdeffb5504eb0ffc08844df84b4de6b1f2b83"
+content-hash = "d617e6ad9c180f1eff23f7ff3865dae344214c8c5a458b9bc35dfc54ab324a28"
 
 [metadata.files]
 attrs = []
 beautifulsoup4 = []
 black = []
-bs4 = []
 cachetools = []
 chardet = []
 click = []
