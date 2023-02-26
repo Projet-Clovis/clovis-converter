@@ -1,9 +1,10 @@
 """
 Used to convert Clovis study sheet to LaTeX format.
 """
-from typing import Final
 import re
 from html.parser import HTMLParser
+from typing import Final
+
 from bs4 import BeautifulSoup
 
 from src.common import rename_tags

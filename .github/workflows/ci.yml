@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
+      - name: Run Isort to sort imports
+        run: poetry run isort --check .
+
       - name: Run Black to check formatting
         run: poetry run black --check .
 

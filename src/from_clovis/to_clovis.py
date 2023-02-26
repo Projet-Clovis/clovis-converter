@@ -2,10 +2,11 @@
 Used to convert old Clovis study sheet to the new format.
 And later, may be used to validate study sheet?
 """
-from typing import Final, Pattern
-from bs4 import BeautifulSoup
 import re
 from html.parser import HTMLParser
+from typing import Final, Pattern
+
+from bs4 import BeautifulSoup
 
 from src.common import remove_tags, rename_tags
 

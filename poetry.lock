@@ -127,6 +127,20 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "isort"
+version = "5.12.0"
+description = "A Python utility / library to sort Python imports."
+category = "main"
+optional = false
+python-versions = ">=3.8.0"
+
+[package.extras]
+colors = ["colorama (>=0.4.3)"]
+requirements-deprecated-finder = ["pip-api", "pipreqs"]
+pipfile-deprecated-finder = ["pip-shims (>=0.5.2)", "pipreqs", "requirementslib"]
+plugins = ["setuptools"]
+
+[[package]]
 name = "mccabe"
 version = "0.7.0"
 description = "McCabe checker, plugin for flake8"
@@ -335,7 +349,7 @@ test = ["covdefaults (>=2.2.2)", "coverage-enable-subprocess (>=1)", "coverage (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "d617e6ad9c180f1eff23f7ff3865dae344214c8c5a458b9bc35dfc54ab324a28"
+content-hash = "849766e90555d93209ed806fbdf5623946af16553224c3208d82c36a30249a84"
 
 [metadata.files]
 attrs = []
@@ -349,6 +363,7 @@ distlib = []
 filelock = []
 flake8 = []
 iniconfig = []
+isort = []
 mccabe = []
 mistune = []
 mypy = []
