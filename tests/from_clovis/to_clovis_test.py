@@ -25,6 +25,10 @@ def test_h1() -> None:
     check_conversion("h1")
 
 
+def test_h2() -> None:
+    check_conversion("h2")
+
+
 def test_definition() -> None:
     check_conversion("definition")
 
