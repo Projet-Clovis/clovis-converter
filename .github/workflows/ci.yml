@@ -32,3 +32,6 @@ jobs:
 
       - name: Run Mypy to static check types
         run: poetry run mypy .
+
+      - name: Run tests
+        run: poetry run pytest
