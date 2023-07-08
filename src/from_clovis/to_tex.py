@@ -263,7 +263,9 @@ def clovis_to_tex(clovis_input: str) -> str:
     soup_text = str(soup)
 
     # Parser
-    parser: MyHTMLParser = MyHTMLParser()  # fixme(perf): pass the HTMLParser as an argument of the function, so that
+    parser: MyHTMLParser = (
+        MyHTMLParser()
+    )  # fixme(perf): pass the HTMLParser as an argument of the function, so that
     # if you do multiple conversion, the Parser is only created once? Benchmark this
     parser.feed(soup_text)
 

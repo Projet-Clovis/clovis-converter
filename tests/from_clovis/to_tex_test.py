@@ -14,7 +14,7 @@ def _check_conversion(input_location: str, output_location: str) -> None:
     assert result == expected_output
 
 
-def check_conversion(block_name: str, directory: str="core") -> None:
+def check_conversion(block_name: str, directory: str = "core") -> None:
     _check_conversion(
         f"tests/assets/study-sheet/block/{directory}/{block_name}.html",
         f"tests/assets/study-sheet/block/{directory}/{block_name}.tex",
