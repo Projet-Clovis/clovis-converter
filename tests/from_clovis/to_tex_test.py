@@ -14,10 +14,10 @@ def _check_conversion(input_location: str, output_location: str) -> None:
     assert result == expected_output
 
 
-def check_conversion(block_name: str) -> None:
+def check_conversion(block_name: str, directory: str="core") -> None:
     _check_conversion(
-        f"tests/assets/study-sheet/block/core/{block_name}.html",
-        f"tests/assets/study-sheet/block/core/{block_name}.tex",
+        f"tests/assets/study-sheet/block/{directory}/{block_name}.html",
+        f"tests/assets/study-sheet/block/{directory}/{block_name}.tex",
     )
 
 
@@ -34,9 +34,9 @@ def test_colorful_block() -> None:
     check_conversion("colorful-block")
 
 
-def katex_code() -> None:
-    check_conversion("katex-code")
+def test_katex_code() -> None:
+    check_conversion("katex-code", "subject")
 
 
-def katex_inline_code() -> None:
-    check_conversion("katex-inline-code")
+def test_katex_inline_code() -> None:
+    check_conversion("katex-inline-code", "subject")
