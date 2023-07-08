@@ -22,4 +22,4 @@ A tool to convert Clovis study sheets and flashcards into popular formats (docx,
 Run `poetry run pytest`.
 
 ## Create stubs for mypy
-Use `stubgen file.py` to create stubs (`.pyi` files) for mypy.
+Use `poetry run stubgen file.py` to create stubs (`.pyi` files) for mypy.
