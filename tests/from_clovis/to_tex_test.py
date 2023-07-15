@@ -1,6 +1,5 @@
-from typing import Final
-
 from src.from_clovis.to_tex import clovis_to_tex
+from ..utils import check_files
 
 
 def _check_conversion(input_location: str, output_location: str) -> None:
@@ -23,20 +22,6 @@ def check_conversion(block_name: str, directory: str = "core") -> None:
     )
 
 
-FILES_TO_TEST: Final = [
-    # Core blocks
-    ("h1", "core"),
-    ("h2", "core"),
-    # ("h3", "core"),
-    ("definition", "core"),
-    ("colorful-block", "core"),
-    # Subject blocks
-    ("katex-code", "subject"),
-    ("katex-inline-code", "subject"),
-]
+def test_files():
+    check_files(check_conversion)
 
-
-def test_files() -> None:
-    for block, folder in FILES_TO_TEST:
-        print(f"{folder}/{block}")
-        check_conversion(block, folder)
