@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from src.common import rename_tags
 
 # CONSTANTS
+DEBUG = False
+
 COLORFUL_BLOCKS: Final = (
     "definition",
     "excerpt",
@@ -192,7 +194,8 @@ class MyHTMLParser(HTMLParser):
         self.inside_tag = {"katex-inline-code": False}
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        print("Encountered a start tag:", tag, attrs)
+        if DEBUG:
+            print("Encountered a start tag:", tag, attrs)
 
         if tag == "katex-inline-code":
             self.inside_tag["katex-inline-code"] = True
@@ -204,7 +207,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += START_TAG[tag]
 
     def handle_endtag(self, tag: str) -> None:
-        print("Encountered an end tag :", tag)
+        if DEBUG:
+            print("Encountered an end tag :", tag)
 
         if tag == "katex-inline-code":
             self.inside_tag["katex-inline-code"] = False
@@ -216,7 +220,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += "}"
 
     def handle_data(self, data: str) -> None:
-        print(f"Encountered some data :\n\t{repr(data)}")
+        if DEBUG:
+            print(f"Encountered some data :\n\t{repr(data)}")
 
         if data.strip() != "" and self.inside_tag["katex-inline-code"]:
             self.doc += process_katex_inline_code(data)
