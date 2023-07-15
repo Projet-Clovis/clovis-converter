@@ -1,15 +1,13 @@
 from typing import Final, Callable, List, Optional
 
+CORE_BLOCKS: Final = ("h1", "h2", "h3", "text", "definition", "colorful-block")
+SUBJECT_BLOCKS: Final = ("katex-code", "katex-inline-code")
+INLINE_STYLE: Final = ("b", "i", "hl-yellow")
+
 FILES_TO_TEST: Final = (
-    # Core blocks
-    ("h1", "core"),
-    ("h2", "core"),
-    ("h3", "core"),
-    ("definition", "core"),
-    ("colorful-block", "core"),
-    # Subject blocks
-    ("katex-code", "subject"),
-    ("katex-inline-code", "subject"),
+    *((block, "block/core") for block in CORE_BLOCKS),
+    *((block, "block/subject") for block in SUBJECT_BLOCKS),
+    *((inline, "inline-style") for inline in INLINE_STYLE),
 )
 
 
@@ -37,8 +35,8 @@ def check_conversion(
 ) -> None:
     _check_conversion(
         conversion_function,
-        f"tests/assets/study-sheet/block/{input_file}",
-        f"tests/assets/study-sheet/block/{output_file}",
+        f"tests/assets/study-sheet/{input_file}",
+        f"tests/assets/study-sheet/{output_file}",
     )
 
 
@@ -53,9 +51,9 @@ def check_files(
         folder_exclude_list = []
 
     for block, folder in FILES_TO_TEST:
-        print(f"{folder}/{block}")
-
         if folder not in folder_exclude_list:
+            print(f"{folder}/{block}")
+
             input_file = f"{folder}/{block}/{input_name}"
             output_file = f"{folder}/{block}/{output_name}"
 
