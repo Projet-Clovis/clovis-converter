@@ -1,6 +1,5 @@
-from typing import Final
-
 from src.from_clovis.to_tex import clovis_to_tex
+
 from ..utils import check_files
 
 

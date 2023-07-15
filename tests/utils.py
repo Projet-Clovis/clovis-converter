@@ -1,4 +1,4 @@
-from typing import Final, Callable, List, Optional
+from typing import Callable, Final, List, Optional
 
 CORE_BLOCKS: Final = ("h1", "h2", "h3", "text", "definition", "colorful-block")
 SUBJECT_BLOCKS: Final = ("katex-code", "katex-inline-code")
