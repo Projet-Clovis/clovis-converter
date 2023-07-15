@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 
 from src.common import remove_tags, rename_tags
 
+DEBUG = False
+
 REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
 REMOVE_EMPTY_TAGS: Final = ("b", "i")
 COLORFUL_BLOCKS = (
@@ -119,7 +121,8 @@ class MyHTMLParser(HTMLParser):
         self.doc = ""
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        print("Encountered a start tag:", tag, attrs)
+        if DEBUG:
+            print("Encountered a start tag:", tag, attrs)
 
         if tag in TAG_LIST:
             self.doc += START_TAG[tag]
@@ -127,7 +130,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += "</div>"
 
     def handle_endtag(self, tag: str) -> None:
-        print("Encountered an end tag :", tag)
+        if DEBUG:
+            print("Encountered an end tag :", tag)
 
         if tag in TAG_LIST:
             self.doc += END_TAG[tag]
@@ -135,7 +139,8 @@ class MyHTMLParser(HTMLParser):
             self.doc += "</div>"
 
     def handle_data(self, data: str) -> None:
-        print("Encountered some data  :", repr(data))
+        if DEBUG:
+            print("Encountered some data  :", repr(data))
 
         if data.strip() != "":
             self.doc += data
