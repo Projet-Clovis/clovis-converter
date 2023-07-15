@@ -1,4 +1,4 @@
-from typing import Final, Callable, List
+from typing import Final, Callable, List, Optional
 
 FILES_TO_TEST: Final = (
     # Core blocks
@@ -52,9 +52,12 @@ def check_files(
     conversion_function: Callable[[str], str],
     input_name: str,
     output_name: str,
-    folder_exclude_list: List[str],
+    folder_exclude_list: Optional[List[str]] = None,
 ) -> None:
     """Helper function to test several files using a conversion function."""
+    if folder_exclude_list is None:
+        folder_exclude_list = []
+
     for block, folder in FILES_TO_TEST:
         print(f"{folder}/{block}")
 

@@ -6,5 +6,5 @@ from ..utils import check_files
 folder_exclude_list: Final = ["subject"]
 
 
-def test_files():
+def test_files() -> None:
     check_files(clovis_to_clovis, "clovis-old.html", "clovis.html", folder_exclude_list)
