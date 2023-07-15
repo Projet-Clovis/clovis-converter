@@ -12,12 +12,6 @@ FILES_TO_TEST: Final = (
     ("katex-inline-code", "subject"),
 )
 
-FILENAME = (
-    "clovis.html",
-    "clovis-old.html",
-    "tex.tex",
-)
-
 
 def _check_conversion(
     conversion_function: Callable[[str], str],
