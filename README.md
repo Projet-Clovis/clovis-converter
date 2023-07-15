@@ -18,6 +18,9 @@ A tool to convert Clovis study sheets and flashcards into popular formats (docx,
 
 
 # Documentation
+## Install pre-commit hooks
+Run `poetry run pre-commit install`.
+
 ## Run tests
 Run `poetry run pytest`.
 
