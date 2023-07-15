@@ -59,6 +59,14 @@ optional = false
 python-versions = "~=3.7"
 
 [[package]]
+name = "cfgv"
+version = "3.3.1"
+description = "Validate configuration and produce human readable error messages."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[[package]]
 name = "chardet"
 version = "5.1.0"
 description = "Universal encoding detector for Python 3"
@@ -117,6 +125,17 @@ python-versions = ">=3.8.1"
 mccabe = ">=0.7.0,<0.8.0"
 pycodestyle = ">=2.10.0,<2.11.0"
 pyflakes = ">=3.0.0,<3.1.0"
+
+[[package]]
+name = "identify"
+version = "2.5.24"
+description = "File identification library for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+license = ["ukkonen"]
 
 [[package]]
 name = "iniconfig"
@@ -183,6 +202,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "nodeenv"
+version = "1.8.0"
+description = "Node.js virtual environment builder"
+category = "dev"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*"
+
+[[package]]
 name = "packaging"
 version = "23.0"
 description = "Core utilities for Python packages"
@@ -221,6 +248,21 @@ python-versions = ">=3.6"
 [package.extras]
 dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
+
+[[package]]
+name = "pre-commit"
+version = "3.3.3"
+description = "A framework for managing and maintaining multi-language pre-commit hooks."
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+cfgv = ">=2.0.0"
+identify = ">=1.0.0"
+nodeenv = ">=0.11.1"
+pyyaml = ">=5.1"
+virtualenv = ">=20.10.0"
 
 [[package]]
 name = "pycodestyle"
@@ -270,6 +312,14 @@ pluggy = ">=0.12,<2.0"
 
 [package.extras]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+
+[[package]]
+name = "pyyaml"
+version = "6.0"
+description = "YAML parser and emitter for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
 
 [[package]]
 name = "soupsieve"
@@ -349,33 +399,38 @@ test = ["covdefaults (>=2.2.2)", "coverage-enable-subprocess (>=1)", "coverage (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "849766e90555d93209ed806fbdf5623946af16553224c3208d82c36a30249a84"
+content-hash = "bbbb41703a3f79903c90f77e6b074bc98bda9d333c7ca801234c4d8eab147408"
 
 [metadata.files]
 attrs = []
 beautifulsoup4 = []
 black = []
 cachetools = []
+cfgv = []
 chardet = []
 click = []
 colorama = []
 distlib = []
 filelock = []
 flake8 = []
+identify = []
 iniconfig = []
 isort = []
 mccabe = []
 mistune = []
 mypy = []
 mypy-extensions = []
+nodeenv = []
 packaging = []
 pathspec = []
 platformdirs = []
 pluggy = []
+pre-commit = []
 pycodestyle = []
 pyflakes = []
 pyproject-api = []
 pytest = []
+pyyaml = []
 soupsieve = []
 tox = []
 types-beautifulsoup4 = []
