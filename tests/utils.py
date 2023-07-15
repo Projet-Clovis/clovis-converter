@@ -4,7 +4,7 @@ FILES_TO_TEST: Final = (
     # Core blocks
     ("h1", "core"),
     ("h2", "core"),
-    # ("h3", "core"),
+    ("h3", "core"),
     ("definition", "core"),
     ("colorful-block", "core"),
     # Subject blocks
