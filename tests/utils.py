@@ -1,6 +1,6 @@
 from typing import Final, Callable
 
-FILES_TO_TEST: Final = [
+FILES_TO_TEST: Final = (
     # Core blocks
     ("h1", "core"),
     ("h2", "core"),
@@ -10,7 +10,7 @@ FILES_TO_TEST: Final = [
     # Subject blocks
     ("katex-code", "subject"),
     ("katex-inline-code", "subject"),
-]
+)
 
 
 def check_files(check_conversion_function: Callable[[str, str], None]) -> None:
