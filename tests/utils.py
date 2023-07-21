@@ -1,4 +1,4 @@
-from typing import Callable, Final, List, Optional
+from typing import Callable, Final, Optional
 
 CORE_BLOCKS: Final = ("h1", "h2", "h3", "text", "definition", "colorful-block")
 SUBJECT_BLOCKS: Final = ("katex-code", "katex-inline-code")
@@ -44,7 +44,7 @@ def check_files(
     conversion_function: Callable[[str], str],
     input_name: str,
     output_name: str,
-    folder_exclude_list: Optional[List[str]] = None,
+    folder_exclude_list: Optional[list[str]] = None,
 ) -> None:
     """Helper function to test several files using a conversion function."""
     if folder_exclude_list is None:
