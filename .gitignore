@@ -8,5 +8,6 @@ temp/
 archive/
 .pytest_cache/
 .mypy_cache/
+out/
 
 venv/
