@@ -251,6 +251,7 @@ def clovis_to_tex(clovis_input: str) -> str:
     rename_tags(soup, ".quote-date", "quote-date")
 
     # Colorful blocks
+    rename_tags(soup, ".cb-container .cb-text", "cb-text")
     rename_tags(soup, ".cb-container .text", "cb-text")
 
     # Definition

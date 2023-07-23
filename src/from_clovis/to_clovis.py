@@ -40,6 +40,7 @@ TAG_LIST: Final[tuple[str, ...]] = (
     "h3",
     "h4",
     "p",
+    "cb-text",
     "quote",
     "quote-content",
     "quote-author",
@@ -65,6 +66,7 @@ START_TAG: Final[dict[str, str]] = {
     "h3": '<h3 class="title">',
     "h4": '<h4 class="title">',
     "p": '<p class="text">',
+    "cb-text": '<p class="cb-text">',
     "quote": '<div class="quote-container">',
     "quote-content": '<p class="quote-content">',
     "quote-author": '<p class="quote-author">',
@@ -92,6 +94,7 @@ END_TAG: Final[dict[str, str]] = {
     "h3": "</h3>",
     "h4": "</h4>",
     "p": "</p>",
+    "cb-text": "</p>",
     "quote": "</div>",
     "quote-content": "</p>",
     "quote-author": "</p>",
@@ -154,8 +157,6 @@ def clovis_to_clovis(clovis_input: str) -> str:
     remove_tags(soup, ".block-edit-button-container")
     remove_tags(soup, ".material-icons")
 
-    rename_tags(soup, ".cb-content")
-
     # Headings
     rename_tags(soup, "p.title", "h1")
     rename_tags(soup, "p.subtitle", "h2")
@@ -174,6 +175,9 @@ def clovis_to_clovis(clovis_input: str) -> str:
     rename_tags(soup, ".definition p", "definition-text")
 
     # Colorful blocks
+    rename_tags(soup, ".cb-content p", "cb-text")
+    rename_tags(soup, ".cb-content")
+
     for c in COLORFUL_BLOCKS:
         rename_tags(soup, f".{c}", c)
 
