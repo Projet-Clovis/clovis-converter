@@ -1,6 +1,13 @@
 from typing import Callable, Final, Optional
 
-CORE_BLOCKS: Final[tuple[str, ...]] = ("h1", "h2", "h3", "text", "definition", "colorful-block")
+CORE_BLOCKS: Final[tuple[str, ...]] = (
+    "h1",
+    "h2",
+    "h3",
+    "text",
+    "definition",
+    "colorful-block",
+)
 SUBJECT_BLOCKS: Final[tuple[str, ...]] = ("katex-code", "katex-inline-code")
 INLINE_STYLE: Final[tuple[str, ...]] = ("b", "i", "hl-yellow")
 

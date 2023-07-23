@@ -25,7 +25,7 @@ COLORFUL_BLOCKS: Final[tuple[str, ...]] = (
     "remark",
 )
 
-TAG_LIST: Final [tuple[str, ...]] = (
+TAG_LIST: Final[tuple[str, ...]] = (
     "h1",
     "h2",
     "h3",
@@ -103,7 +103,9 @@ END_TAG: Final[dict[str, str]] = {
 KATEX_MATHBB: Final[tuple[str, ...]] = ("N", "Z", "Q", "D", "R", "C")
 
 # commands specific to Katex, not to Latex
-KATEX_COMMANDS_TABLE: Final[dict[str, str]] = {**{c: "mathbb{" + c + "}" for c in KATEX_MATHBB}}
+KATEX_COMMANDS_TABLE: Final[dict[str, str]] = {
+    **{c: "mathbb{" + c + "}" for c in KATEX_MATHBB}
+}
 
 SYMBOLS_TABLE: Final[dict[str, str]] = {
     "⩽": "leqslant",

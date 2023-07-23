@@ -1,6 +1,8 @@
 from html.parser import HTMLParser
-from src.common import remove_tags as remove_tags, rename_tags as rename_tags
 from typing import Final
+
+from src.common import remove_tags as remove_tags
+from src.common import rename_tags as rename_tags
 
 DEBUG: bool
 REMOVE_ENDING_BR_TAGS: Final[tuple[str, ...]]
@@ -19,7 +21,9 @@ NON_SECABLE_SPACE: Final[tuple[str, ...]]
 class MyHTMLParser(HTMLParser):
     doc: str
     def __init__(self) -> None: ...
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None: ...
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None: ...
     def handle_endtag(self, tag: str) -> None: ...
     def handle_data(self, data: str) -> None: ...
 

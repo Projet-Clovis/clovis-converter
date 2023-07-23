@@ -48,7 +48,9 @@ class MyHTMLParser(HTMLParser):
 
 parser = MyHTMLParser()
 
-study_sheet_example: Final[str] = """<!-- Text -->
+study_sheet_example: Final[
+    str
+] = """<!-- Text -->
 <p class="text">Some text.</p>
 
 <!-- Formatted text --> <p class="text">Some <b>bold</b> text and also <i>italic</i>,
