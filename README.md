@@ -29,9 +29,6 @@ clovis_to_tex('<div class="katex-container"><p class="katex-code">5x+3</p></div>
 ```
 
 # Developer documentation
-## Install pre-commit hooks
-Run `poetry run pre-commit install`.
-
 ## Run tests
 Run `poetry run pytest`.
 
