@@ -1,10 +1,10 @@
 from typing import Callable, Final, Optional
 
-CORE_BLOCKS: Final = ("h1", "h2", "h3", "text", "definition", "colorful-block")
-SUBJECT_BLOCKS: Final = ("katex-code", "katex-inline-code")
-INLINE_STYLE: Final = ("b", "i", "hl-yellow")
+CORE_BLOCKS: Final[tuple[str, ...]] = ("h1", "h2", "h3", "text", "definition", "colorful-block")
+SUBJECT_BLOCKS: Final[tuple[str, ...]] = ("katex-code", "katex-inline-code")
+INLINE_STYLE: Final[tuple[str, ...]] = ("b", "i", "hl-yellow")
 
-FILES_TO_TEST: Final = (
+FILES_TO_TEST: Final[tuple[tuple[str, str], ...]] = (
     *((block, "block/core") for block in CORE_BLOCKS),
     *((block, "block/subject") for block in SUBJECT_BLOCKS),
     *((inline, "inline-style") for inline in INLINE_STYLE),

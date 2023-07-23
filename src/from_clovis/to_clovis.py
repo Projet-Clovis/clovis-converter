@@ -12,9 +12,9 @@ from src.common import remove_tags, rename_tags
 
 DEBUG = False
 
-REMOVE_ENDING_BR_TAGS: Final = ("h1", "h2", "h3", "h4", "p", "article")
-REMOVE_EMPTY_TAGS: Final = ("b", "i")
-COLORFUL_BLOCKS = (
+REMOVE_ENDING_BR_TAGS: Final[tuple[str, ...]] = ("h1", "h2", "h3", "h4", "p", "article")
+REMOVE_EMPTY_TAGS: Final[tuple[str, ...]] = ("b", "i")
+COLORFUL_BLOCKS: Final[tuple[str, ...]] = (
     "excerpt",
     "quote",
     "example",
@@ -31,10 +31,10 @@ def get_cb_start(cb: str) -> str:
     return f'<div class="cb-container {cb}">'
 
 
-CB_START_DICT: Final = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
-CB_END_DICT: Final = {cb: "</div>" for cb in COLORFUL_BLOCKS}
+CB_START_DICT: Final[dict[str, str]] = {cb: get_cb_start(cb) for cb in COLORFUL_BLOCKS}
+CB_END_DICT: Final[dict[str, str]] = {cb: "</div>" for cb in COLORFUL_BLOCKS}
 
-TAG_LIST: Final = (
+TAG_LIST: Final[tuple[str, ...]] = (
     "h1",
     "h2",
     "h3",
@@ -59,7 +59,7 @@ TAG_LIST: Final = (
     *COLORFUL_BLOCKS,
 )
 
-START_TAG: Final = {
+START_TAG: Final[dict[str, str]] = {
     "h1": '<h1 class="title">',
     "h2": '<h2 class="title">',
     "h3": '<h3 class="title">',
@@ -86,7 +86,7 @@ START_TAG: Final = {
     **CB_START_DICT,
 }
 
-END_TAG: Final = {
+END_TAG: Final[dict[str, str]] = {
     "h1": "</h1>",
     "h2": "</h2>",
     "h3": "</h3>",
@@ -112,7 +112,7 @@ END_TAG: Final = {
     **CB_END_DICT,
 }
 
-NON_SECABLE_SPACE = ("&amp;nbsp;", " ")
+NON_SECABLE_SPACE: Final[tuple[str, ...]] = ("&amp;nbsp;", " ")
 
 
 class MyHTMLParser(HTMLParser):

@@ -4,7 +4,7 @@ from src.from_clovis.to_clovis import clovis_to_clovis
 
 from ..utils import check_files
 
-folder_exclude_list: Final = ["block/subject"]
+folder_exclude_list: Final[list[str]] = ["block/subject"]
 
 
 def test_files() -> None:

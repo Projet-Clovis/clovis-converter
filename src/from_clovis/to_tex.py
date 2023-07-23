@@ -12,7 +12,7 @@ from src.common import rename_tags
 # CONSTANTS
 DEBUG = False
 
-COLORFUL_BLOCKS: Final = (
+COLORFUL_BLOCKS: Final[tuple[str, ...]] = (
     "definition",
     "excerpt",
     "quote",
@@ -25,7 +25,7 @@ COLORFUL_BLOCKS: Final = (
     "remark",
 )
 
-TAG_LIST = (
+TAG_LIST: Final [tuple[str, ...]] = (
     "h1",
     "h2",
     "h3",
@@ -50,7 +50,7 @@ TAG_LIST = (
     "katex-inline-code",
 )
 
-START_TAG: Final = {
+START_TAG: Final[dict[str, str]] = {
     "h1": r"\section{",
     "h2": r"\subsection{",
     "h3": r"\subsubsection{",
@@ -75,7 +75,7 @@ START_TAG: Final = {
     "katex-inline-code": "",
 }
 
-END_TAG: Final = {
+END_TAG: Final[dict[str, str]] = {
     "h1": "}",
     "h2": "}",
     "h3": "}",
@@ -100,12 +100,12 @@ END_TAG: Final = {
     "katex-inline-code": r"\\",
 }
 
-KATEX_MATHBB = ("N", "Z", "Q", "D", "R", "C")
+KATEX_MATHBB: Final[tuple[str, ...]] = ("N", "Z", "Q", "D", "R", "C")
 
 # commands specific to Katex, not to Latex
-KATEX_COMMANDS_TABLE: Final = {**{c: "mathbb{" + c + "}" for c in KATEX_MATHBB}}
+KATEX_COMMANDS_TABLE: Final[dict[str, str]] = {**{c: "mathbb{" + c + "}" for c in KATEX_MATHBB}}
 
-SYMBOLS_TABLE: Final = {
+SYMBOLS_TABLE: Final[dict[str, str]] = {
     "⩽": "leqslant",
     "⩾": "geqslant",
     "≠": "neq",
@@ -188,6 +188,9 @@ def process_katex_inline_code(latex: str) -> str:
 
 
 class MyHTMLParser(HTMLParser):
+    doc: str
+    inside_tag: dict[str, bool]
+
     def __init__(self) -> None:
         super().__init__()
         self.doc = ""
