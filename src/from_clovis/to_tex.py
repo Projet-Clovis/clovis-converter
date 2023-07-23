@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from src.common import rename_tags
 
 # CONSTANTS
-DEBUG = False
+DEBUG: Final[bool] = False
 
 COLORFUL_BLOCKS: Final[tuple[str, ...]] = (
     "definition",
