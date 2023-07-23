@@ -3,7 +3,7 @@ from typing import Final
 
 from src.common import rename_tags as rename_tags
 
-DEBUG: bool
+DEBUG: Final[bool]
 COLORFUL_BLOCKS: Final[tuple[str, ...]]
 TAG_LIST: Final[tuple[str, ...]]
 START_TAG: Final[dict[str, str]]
