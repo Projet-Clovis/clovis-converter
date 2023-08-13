@@ -31,7 +31,7 @@ BLOCK_TAGS: Final[tuple[str, ...]] = (
     "h3",
     "h4",
     "p",
-    "quote",
+    "quote-container",
     "katex-code",
     "katex-inline-code",
 )
@@ -64,7 +64,7 @@ START_TAG: Final[dict[str, str]] = {
     "h3": r"\subsubsection{",
     "h4": r"\paragraph{",
     "p": "",
-    "quote": r"\clovisQuote{",
+    "quote-container": r"\clovisQuote{",
     "quote-content": "",
     "quote-author": "",
     "quote-source": "",
@@ -89,7 +89,7 @@ END_TAG: Final[dict[str, str]] = {
     "h3": "}",
     "h4": r"}\mbox{}\vspace{8px}\\",
     "p": r"\\" + "",
-    "quote": "",
+    "quote-container": "",
     "quote-content": "}{",
     "quote-author": "}{",
     "quote-source": "}{",
@@ -257,7 +257,7 @@ def clovis_to_tex(clovis_input: str, newline_separator: bool = False) -> str:
     rename_tags(soup, ".definition .text", "definition-text")
 
     # Quote / Excerpts
-    rename_tags(soup, ".quote", "quote")
+    rename_tags(soup, ".quote-container", "quote-container")
     rename_tags(soup, ".quote-content", "quote-content")
     rename_tags(soup, ".quote-author", "quote-author")
     rename_tags(soup, ".quote-source", "quote-source")
