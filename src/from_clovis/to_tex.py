@@ -25,13 +25,18 @@ COLORFUL_BLOCKS: Final[tuple[str, ...]] = (
     "remark",
 )
 
-TAG_LIST: Final[tuple[str, ...]] = (
+BLOCK_TAGS: Final[tuple[str, ...]] = (
     "h1",
     "h2",
     "h3",
     "h4",
     "p",
     "quote",
+    "katex-code",
+    "katex-inline-code",
+)
+
+INLINE_TAGS: Final[tuple[str, ...]] = (
     "quote-content",
     "quote-author",
     "quote-source",
@@ -46,8 +51,11 @@ TAG_LIST: Final[tuple[str, ...]] = (
     "hl-yellow",
     "f-code",
     "br",
-    "katex-code",
-    "katex-inline-code",
+)
+
+TAG_LIST: Final[tuple[str, ...]] = (
+    *BLOCK_TAGS,
+    *INLINE_TAGS,
 )
 
 START_TAG: Final[dict[str, str]] = {
@@ -192,11 +200,13 @@ def process_katex_inline_code(latex: str) -> str:
 class MyHTMLParser(HTMLParser):
     doc: str
     inside_tag: dict[str, bool]
+    newline_separator: bool
 
-    def __init__(self) -> None:
+    def __init__(self, newline_separator: bool = False) -> None:
         super().__init__()
         self.doc = ""
         self.inside_tag = {"katex-inline-code": False}
+        self.newline_separator = newline_separator
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         if DEBUG:
@@ -224,6 +234,9 @@ class MyHTMLParser(HTMLParser):
         elif tag in COLORFUL_BLOCKS and tag != "definition":
             self.doc += "}"
 
+        if self.newline_separator and (tag in BLOCK_TAGS or tag in COLORFUL_BLOCKS):
+            self.doc += "\n\n"
+
     def handle_data(self, data: str) -> None:
         if DEBUG:
             print(f"Encountered some data :\n\t{repr(data)}")
@@ -235,7 +248,7 @@ class MyHTMLParser(HTMLParser):
             self.doc += escape_text(data)
 
 
-def clovis_to_tex(clovis_input: str) -> str:
+def clovis_to_tex(clovis_input: str, newline_separator: bool = False) -> str:
     # Pre-processing the study-sheet
     soup = BeautifulSoup(clovis_input, "html.parser")
 
@@ -274,8 +287,8 @@ def clovis_to_tex(clovis_input: str) -> str:
     soup_text = str(soup)
 
     # Parser
-    parser: MyHTMLParser = (
-        MyHTMLParser()
+    parser: MyHTMLParser = MyHTMLParser(
+        newline_separator
     )  # fixme(perf): pass the HTMLParser as an argument of the function, so that
     # if you do multiple conversion, the Parser is only created once? Benchmark this
     parser.feed(soup_text)
