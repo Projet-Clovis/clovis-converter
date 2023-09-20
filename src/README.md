@@ -11,7 +11,7 @@ For example, the code for converting Clovis to LaTeX (`.tex` file) is located at
 This is the folder organization of the folder.
 
 [`📂 from_clovis`](https://github.com/Projet-Clovis/clovis-converter/tree/main/src/from_clovis)    
-> Code that converts clovis format to other formats.
+> Code that converts Clovis format to other formats.
 
 [`📂 from_md`](https://github.com/Projet-Clovis/clovis-converter/tree/main/src/from_md)    
-> Code that converts md format to Clovis format.
+> Code that converts Markdown format to Clovis format.
