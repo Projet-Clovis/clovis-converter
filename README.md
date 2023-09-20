@@ -29,6 +29,16 @@ clovis_to_tex('<div class="katex-container"><p class="katex-code">5x+3</p></div>
 ```
 
 # Developer documentation
+## Folder organization
+
+This is the folder organization of the project.
+
+[`📂 src`](https://github.com/Projet-Clovis/clovis-converter/tree/main/src)    
+> Contains the source code of the project.
+
+[`📂 tests`](https://github.com/Projet-Clovis/clovis-converter/tree/main/tests)    
+> Contains the tests.
+
 ## Run tests
 Run `poetry run pytest`.
 
