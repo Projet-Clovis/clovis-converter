@@ -1,6 +1,7 @@
 """
 Used to convert Clovis study sheet to LaTeX format.
 """
+
 import re
 from html.parser import HTMLParser
 from typing import Final

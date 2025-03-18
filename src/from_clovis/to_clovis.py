@@ -2,6 +2,7 @@
 Used to convert old Clovis study sheet to the new format.
 And later, may be used to validate study sheet?
 """
+
 import re
 from html.parser import HTMLParser
 from typing import Final, Pattern
@@ -83,8 +84,7 @@ START_TAG: Final[dict[str, str]] = {
     "f-code": '<span class="f-code">',
     "br": "<br>",
     "katex-code": '<div class="katex-container"><p class="katex-code">',
-    "katex-inline-code": '<div class="katex-container"><p '
-    'class="katex-inline-code">',
+    "katex-inline-code": '<div class="katex-container"><p class="katex-inline-code">',
     **CB_START_DICT,
 }
 
