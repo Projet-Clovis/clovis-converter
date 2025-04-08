@@ -1,6 +1,6 @@
 from src.from_clovis.to_tex import clovis_to_tex
 
-from ..utils import check_files
+from tests.utils import check_files
 
 
 def test_files() -> None:
