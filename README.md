@@ -40,7 +40,7 @@ This is the folder organization of the project.
 > Contains the tests.
 
 ## Run tests
-Run `poetry run pytest`.
+Run `uv run pytest`.
 
 ## Create stubs for mypy
-Use `poetry run stubgen file.py` to create stubs (`.pyi` files) for mypy.
+Use `uv run stubgen file.py` to create stubs (`.pyi` files) for mypy.
